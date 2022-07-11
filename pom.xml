@@ -8,5 +8,21 @@
     <artifactId>MasteryProject</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <!-- new dependency -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     
 </project>
