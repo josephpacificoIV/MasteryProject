@@ -1,4 +1,4 @@
-# Schedule of Tasks
+# Schedule of Tasks/Class Diagram
 
 Spring DI with XML (1 hour)
 
