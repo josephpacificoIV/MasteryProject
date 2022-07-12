@@ -1,6 +1,9 @@
 package learn.mastery.ui;
 
 import learn.mastery.data.DataException;
+import learn.mastery.domain.GuestService;
+import learn.mastery.domain.HostService;
+import learn.mastery.domain.ReservationService;
 
 public class Controller {
     private final ReservationService reservationService;
@@ -8,7 +11,11 @@ public class Controller {
     private final GuestService guestService;
     private final View view;
 
-    public Controller(ReservationService reservationService, HostService hostService, GuestService guestService, View view) {
+    public Controller(ReservationService reservationService,
+                      HostService hostService,
+                      GuestService guestService,
+                      View view) {
+
         this.reservationService = reservationService;
         this.hostService = hostService;
         this.guestService = guestService;
