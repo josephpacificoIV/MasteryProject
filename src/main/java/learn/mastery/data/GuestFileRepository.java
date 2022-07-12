@@ -37,6 +37,14 @@ public class GuestFileRepository implements GuestRepository {
         return result;
     }
 
+    @Override
+    public Guest findById(String id) {
+        return findAll().stream()
+                .filter(i -> i.getGuest_id().equalsIgnoreCase(id))
+                .findFirst()
+                .orElse(null);
+    }
+
     private String serialize(Guest guest) {
         return String.format("%s,%s,%s,%s,%s,%s",
                 guest.getGuest_id(),
@@ -49,7 +57,7 @@ public class GuestFileRepository implements GuestRepository {
 
     private Guest deserialize(String[] fields) {
         Guest result = new Guest();
-        result.setGuest_id(Integer.parseInt(fields[0]));
+        result.setGuest_id(fields[0]);
         result.setFirst_name(fields[1]);
         result.setLast_name(fields[2]);
         result.setEmail(fields[3]);
@@ -58,11 +66,5 @@ public class GuestFileRepository implements GuestRepository {
         return result;
     }
 
-    @Override
-    public Guest findById(String id) {
-        return findAll().stream()
-                .filter(i -> i.getId().equalsIgnoreCase(id))
-                .findFirst()
-                .orElse(null);
-    }
+
 }

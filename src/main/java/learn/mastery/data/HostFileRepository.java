@@ -63,7 +63,7 @@ public class HostFileRepository implements HostRepository{
 
     private Host deserialize(String[] fields) {
         Host result = new Host();
-        result.setId(Integer.parseInt(fields[0]));
+        result.setId(fields[0]);
         result.setLast_name(fields[1]);
         result.setEmail(fields[2]);
         result.setPhone(fields[3]);

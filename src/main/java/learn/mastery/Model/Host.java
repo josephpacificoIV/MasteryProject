@@ -2,7 +2,7 @@ package learn.mastery.Model;
 
 public class Host {
 
-    private int id;
+    private String id;
     private String last_name;
     private String email;
     private String phone;
@@ -17,7 +17,7 @@ public class Host {
 
     }
 
-    public Host(int id, String last_name, String email, String phone, String address, String city, String state, String postal_code, double standard_rate, double weekend_rate) {
+    public Host(String id, String last_name, String email, String phone, String address, String city, String state, String postal_code, double standard_rate, double weekend_rate) {
 
         this.id = id;
         this.last_name = last_name;
@@ -31,11 +31,11 @@ public class Host {
         this.weekend_rate = weekend_rate;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

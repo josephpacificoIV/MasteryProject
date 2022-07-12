@@ -32,6 +32,7 @@ class HostFileRepositoryTest {
     void shouldFindAllHosts() {
         List<Host> all = repository.findAll();
         assertEquals(4, all.size());
+
     }
 
     @Test

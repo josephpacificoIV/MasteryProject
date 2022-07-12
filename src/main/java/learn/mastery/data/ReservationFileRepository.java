@@ -69,7 +69,7 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
     private Reservation deserialize(String[] fields, String host) {
-        Reservation result = new Reservation();
+        /*Reservation result = new Reservation();
         result.setId(fields[0]);
         result.setDate(host);
         result.setKilograms(Double.parseDouble(fields[3]));
@@ -79,10 +79,11 @@ public class ReservationFileRepository implements ReservationRepository{
         result.setForager(forager);
 
         Guest guest = new Guest();
-        guest.setGuest_id(Integer.parseInt(fields[3]));
+        guest.setGuest_id(fields[3]);
 
         result.setTotal(guest);
-        return result;
+        return result;*/
+        return null;
     }
 
 

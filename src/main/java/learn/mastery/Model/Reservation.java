@@ -46,10 +46,6 @@ public class Reservation {
         this.guest_id = guest_id;
     }
 
-    /*public double getTotal() {
-        return total;
-    }*/
-
     public Host getHost() {
         return host;
     }
@@ -65,12 +61,13 @@ public class Reservation {
     }
 
     public BigDecimal getTotal() {
-        if ((start_date == null || end_date == null) ||
+        /*if ((start_date == null || end_date == null) ||
                 (host.getWeekend_rate() > 0 || host.getStandard_rate() > 0)) {
             return BigDecimal.ZERO;
         }
         BigDecimal kilos = new BigDecimal(kilograms).setScale(4, RoundingMode.HALF_UP);
-        return item.getDollarPerKilogram().multiply(kilos);
+        return item.getDollarPerKilogram().multiply(kilos);*/
+        return null;
     }
 
 

@@ -27,7 +27,7 @@ public class App {
         GuestService guestService = new GuestService(guestFileRepository);
 
         //Controller controller = context.getBean(Controller.class);
-        Controller controller = new Controller(reservationFileRepository, hostFileRepository, guestFileRepository, view);
+        Controller controller = new Controller(reservationService, hostService, guestService, view);
         controller.run();
 
     }
