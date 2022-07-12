@@ -1,4 +1,4 @@
-package learn.mastery.domain;
+package learn.mastery.Model;
 
 public class Reservation {
 }

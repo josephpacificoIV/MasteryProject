@@ -3,12 +3,10 @@ package learn.mastery;
 import learn.mastery.data.GuestFileRepository;
 import learn.mastery.data.HostFileRepository;
 import learn.mastery.data.ReservationFileRepository;
-import learn.mastery.domain.Reservation;
+import learn.mastery.domain.ReservationService;
 import learn.mastery.ui.ConsoleIO;
 import learn.mastery.ui.Controller;
 import learn.mastery.ui.View;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App {
 
@@ -27,7 +25,7 @@ public class App {
         GuestService guestService = new GuestService(guestFileRepository);
 
         //Controller controller = context.getBean(Controller.class);
-        Controller controller = new Controller(guestFileRepository, hostFileRepository, reservationFileRepository, view);
+        Controller controller = new Controller(reservationFileRepository, hostFileRepository, guestFileRepository, view);
         controller.run();
 
     }

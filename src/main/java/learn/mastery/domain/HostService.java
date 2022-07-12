@@ -1,4 +1,4 @@
 package learn.mastery.domain;
 
-public class Host {
+public class HostService {
 }

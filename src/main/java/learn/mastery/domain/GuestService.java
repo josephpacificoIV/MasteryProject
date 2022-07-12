@@ -1,4 +1,4 @@
 package learn.mastery.domain;
 
-public class Guest {
+public class GuestService {
 }
