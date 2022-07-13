@@ -1,7 +1,6 @@
 package learn.mastery.data;
 
 import learn.mastery.Model.Guest;
-import learn.mastery.Model.Host;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class GuestFileRepository implements GuestRepository {
     }
 
     @Override
-    public List<Guest> findAllGuest() {
+    public List<Guest> findAll() {
         ArrayList<Guest> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 
@@ -38,16 +37,16 @@ public class GuestFileRepository implements GuestRepository {
     }
 
     @Override
-    public Guest findGuestById(String id) {
-        return findAllGuest().stream()
-                .filter(i -> i.getGuest_id().equalsIgnoreCase(id))
+    public Guest findById(String id) {
+        return findAll().stream()
+                .filter(i -> i.getId().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
-    public Guest findGuestByEmail(String email) {
-        return findAllGuest().stream()
+    public Guest findByEmail(String email) {
+        return findAll().stream()
                 .filter(i -> Objects.equals(i.getEmail(), email))
                 .findFirst()
                 .orElse(null);
@@ -58,7 +57,7 @@ public class GuestFileRepository implements GuestRepository {
 
     private String serialize(Guest guest) {
         return String.format("%s,%s,%s,%s,%s,%s",
-                guest.getGuest_id(),
+                guest.getId(),
                 guest.getFirst_name(),
                 guest.getLast_name(),
                 guest.getEmail(),
@@ -68,7 +67,7 @@ public class GuestFileRepository implements GuestRepository {
 
     private Guest deserialize(String[] fields) {
         Guest result = new Guest();
-        result.setGuest_id(fields[0]);
+        result.setId(fields[0]);
         result.setFirst_name(fields[1]);
         result.setLast_name(fields[2]);
         result.setEmail(fields[3]);

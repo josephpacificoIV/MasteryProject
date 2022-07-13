@@ -1,14 +1,9 @@
 package learn.mastery.domain;
 
 import learn.mastery.Model.Guest;
-import learn.mastery.Model.Host;
 import learn.mastery.data.DataException;
 import learn.mastery.data.GuestRepository;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,11 +17,21 @@ public class GuestService {
         this.repository = repository;
     }
 
-    public List<Guest> findGuestByEmail(String email) throws DataException {
-        return repository.findAllGuest().stream()
+    public List<Guest> findByEmail(String email) throws DataException {
+        return repository.findAll().stream()
                 .filter(i -> Objects.equals(i.getEmail(), email))
                 .collect(Collectors.toList());
     }
+
+    public List<Guest> findAll() throws DataException {
+        return repository.findAll();
+    }
+
+    public Guest findById(String id) throws DataException {
+        return repository.findById(id);
+    }
+
+
 
 
     /*public List<Guest> findAllGuest() {

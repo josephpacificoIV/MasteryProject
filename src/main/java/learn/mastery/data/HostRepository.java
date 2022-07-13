@@ -8,4 +8,6 @@ public interface HostRepository {
     List<Host> findAll();
 
     Host findById(String id);
+
+    Host findByEmail(String email);
 }

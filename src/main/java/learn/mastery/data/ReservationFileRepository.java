@@ -13,6 +13,7 @@ import java.time.Period;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ReservationFileRepository implements ReservationRepository{
 
@@ -25,7 +26,7 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
     @Override
-    public List<Reservation> findByHostId(String id) {
+    public List<Reservation> findByHost(String id) {
         ArrayList<Reservation> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath(id)))) {
 
@@ -44,19 +45,14 @@ public class ReservationFileRepository implements ReservationRepository{
         return result;
     }
 
-    public List<LocalDate> getTotal(LocalDate start_date, LocalDate end_date, double weekday_rate, double weekend_rate) {
+    @Override
+    public Reservation findById(List<Reservation> reservations, int id) {
+        return reservations.stream()
+                .filter(i -> i.getId().equalsIgnoreCase(String.valueOf(id)))
+                .findFirst()
+                .orElse(null);
 
-        List<LocalDate> weekend_days = new ArrayList<>();
-        List<LocalDate> weekday_days = new ArrayList<>();
-        Period diff = Period.between(start_date, end_date);
-        LocalDate dt = date.with(TemporalAdjusters.next(DayOfWeek.FRIDAY)); // gives the next friday
-        while (fridayCount-- > 0 ){
-            fridays.add(dt);
-            dt = dt.plusWeeks(1); // add a week to get next friday
-        }
-        return fridays;
     }
-
 
 
     private String getFilePath(String host) {
@@ -100,25 +96,30 @@ public class ReservationFileRepository implements ReservationRepository{
 
         // guest_id comes from guests.csv
         Guest guest = new Guest();
-        guest.setGuest_id(fields[3]);
+        guest.setId(fields[3]);
         result.setGuest(guest);
 
         // getTotal() method in Host
-        Host host1 = new Host();
+        /*Host host1 = new Host();
         BigDecimal total = host1.setTotal();
-        result.setTotal(total);
+        result.setTotal(total);*/
 
         // or
 
         // getTotal() method in Reservation
         result.setTotal(BigDecimal.valueOf(Long.parseLong(fields[4])));
 
-        // what do I put here? String id or Host host ??
-        // does this set the file name??
-        result.setHost(id);
+
+        Host host = new Host();
+        host.setId(id);
+        // need a new method that will find host in hosts.csv
+        
+        //
+
+        result.setHost(host);
 
         return result;
-        return null;
+       // return null;
     }
 
 

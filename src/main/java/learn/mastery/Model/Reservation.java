@@ -65,19 +65,22 @@ public class Reservation {
     }
 
     public BigDecimal getTotal() {
-        if ((start_date == null || end_date == null) ||
+        BigDecimal standard = host.getStandard_rate();
+        BigDecimal weekend = host.getWeekend_rate();
+
+        /*if ((start_date == null || end_date == null) ||
                 (host.getWeekend_rate() <= 0 || host.getStandard_rate() <= 0)) {
             return BigDecimal.ZERO;
-        }
+        }*/
         /*BigDecimal kilos = new BigDecimal(kilograms).setScale(4, RoundingMode.HALF_UP);
         return item.getDollarPerKilogram().multiply(kilos);
         return null;*/
 
-        Set<DayOfWeek> weekend = EnumSet.of(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+        Set<DayOfWeek> weekends = EnumSet.of(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
         final long weekDaysBetween = start_date.datesUntil(end_date)
-                .filter(d -> !weekend.contains(d.getDayOfWeek()))
+                .filter(d -> !weekends.contains(d.getDayOfWeek()))
                 .count();
-        BigDecimal weekDayCost = BigDecimal.valueOf(weekDaysBetween * (host.getStandard_rate()) );
+        //BigDecimal weekDayCost = BigDecimal.valueOf(weekDaysBetween * (host.getStandard_rate()) );
 
         Set<DayOfWeek> weekday = EnumSet.of(
                 DayOfWeek.SUNDAY,
@@ -88,10 +91,10 @@ public class Reservation {
         final long weekEndsBetween = start_date.datesUntil(end_date)
                 .filter(d -> !weekday.contains(d.getDayOfWeek()))
                 .count();
-        BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
-
-        total = weekEndCost.add(weekDayCost);
-        return total;
+        //BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
+        return standard.multiply(new BigDecimal(weekDaysBetween)).add(weekend.multiply(new BigDecimal(weekEndsBetween)));
+        /*total = weekEndCost.add(weekDayCost);
+        return total;*/
     }
 
 

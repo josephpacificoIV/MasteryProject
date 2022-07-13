@@ -1,5 +1,7 @@
 package learn.mastery.Model;
 
+import java.math.BigDecimal;
+
 public class Host {
 
     private String id;
@@ -10,14 +12,14 @@ public class Host {
     private String city;
     private String state;
     private String postal_code;
-    private double standard_rate;
-    private double weekend_rate;
+    private BigDecimal standard_rate;
+    private BigDecimal weekend_rate;
 
     public Host(){
 
     }
 
-    public Host(String id, String last_name, String email, String phone, String address, String city, String state, String postal_code, double standard_rate, double weekend_rate) {
+    public Host(String id, String last_name, String email, String phone, String address, String city, String state, String postal_code, BigDecimal standard_rate, BigDecimal weekend_rate) {
 
         this.id = id;
         this.last_name = last_name;
@@ -95,19 +97,19 @@ public class Host {
         this.postal_code = postal_code;
     }
 
-    public double getStandard_rate() {
+    public BigDecimal getStandard_rate() {
         return standard_rate;
     }
 
-    public void setStandard_rate(double standard_rate) {
+    public void setStandard_rate(BigDecimal standard_rate) {
         this.standard_rate = standard_rate;
     }
 
-    public double getWeekend_rate() {
+    public BigDecimal getWeekend_rate() {
         return weekend_rate;
     }
 
-    public void setWeekend_rate(double weekend_rate) {
+    public void setWeekend_rate(BigDecimal weekend_rate) {
         this.weekend_rate = weekend_rate;
     }
 }

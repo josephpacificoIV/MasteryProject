@@ -1,10 +1,13 @@
 package learn.mastery.data;
 
+import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HostFileRepository implements HostRepository{
 
@@ -40,7 +43,15 @@ public class HostFileRepository implements HostRepository{
     @Override
     public Host findById(String id) {
         return findAll().stream()
-                .filter(i -> i.getId().equalsIgnoreCase(id))
+                .filter(i -> Objects.equals(i.getId(), id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Host findByEmail(String email) {
+        return findAll().stream()
+                .filter(i -> Objects.equals(i.getEmail(), email))
                 .findFirst()
                 .orElse(null);
     }
@@ -69,8 +80,8 @@ public class HostFileRepository implements HostRepository{
         result.setCity(fields[5]);
         result.setState(fields[6]);
         result.setPostal_code(fields[7]);
-        result.setStandard_rate(Double.parseDouble(fields[8]));
-        result.setWeekend_rate(Double.parseDouble(fields[9]));
+        result.setStandard_rate(new BigDecimal(fields[8]));
+        result.setWeekend_rate(new BigDecimal(fields[9]));
         return result;
     }
 

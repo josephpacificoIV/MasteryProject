@@ -30,19 +30,19 @@ class GuestFileRepositoryTest {
 
     @Test
     void shouldFindAllGuests() {
-        List<Guest> all = repository.findAllGuest();
+        List<Guest> all = repository.findAll();
         assertEquals(5, all.size());
     }
 
     @Test
     void shouldFindGuestByEmail() {
-        Guest guest = repository.findGuestByEmail("slomas0@mediafire.com");
+        Guest guest = repository.findByEmail("slomas0@mediafire.com");
         assertEquals("slomas0@mediafire.com", guest.getEmail());
     }
 
     @Test
     void shouldNotFindGuestByNonExistingEmail() {
-        Guest guest = repository.findGuestByEmail("missing@mediafire.com");
+        Guest guest = repository.findByEmail("missing@mediafire.com");
         assertNull(guest);
     }
 }

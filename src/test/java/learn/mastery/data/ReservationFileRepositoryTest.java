@@ -1,6 +1,5 @@
 package learn.mastery.data;
 
-import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,14 +45,24 @@ class ReservationFileRepositoryTest {
 
     @Test
     void shouldFindByHost() {
-        List<Reservation> forages = repository.findByHostId(id);
-        assertEquals(RESERVATION_COUNT, forages.size());
+        List<Reservation> reservations = repository.findByHost(id);
+        assertEquals(RESERVATION_COUNT, reservations.size());
     }
 
     @Test
-    void shouldCalculateTotalCost() {
-        List<Reservation> forages = repository.findByHostId(id);
-        assertEquals(RESERVATION_COUNT, forages.size());
+    void shouldFindReservationByHost() {
+        List<Reservation> reservations = repository.findByHost(id);
+        Reservation reservation = repository.findById(reservations, 1);
+
+        assertEquals(LocalDate.of(2021, 10, 12), reservation.getStart_date());
+        System.out.printf("%s %s %s %s %s %s",
+                reservation.getId(),
+                reservation.getStart_date(),
+                reservation.getEnd_date(),
+                reservation.getGuest().getId(),
+                reservation.getTotal(),
+                reservation.getGuest().getEmail());
     }
+
 
 }

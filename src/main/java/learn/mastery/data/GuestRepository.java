@@ -5,10 +5,10 @@ import learn.mastery.Model.Guest;
 import java.util.List;
 
 public interface GuestRepository {
-    List<Guest> findAllGuest();
+    List<Guest> findAll();
 
-    Guest findGuestById(String id);
+    Guest findById(String id);
 
-    Guest findGuestByEmail(String email);
+    Guest findByEmail(String email);
 
 }

@@ -2,7 +2,6 @@ package learn.mastery.domain;
 
 import learn.mastery.Model.Guest;
 import learn.mastery.data.DataException;
-import learn.mastery.data.GuestRepository;
 import learn.mastery.data.GuestRepositoryDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,17 +22,23 @@ class GuestServiceTest {
 
     @Test
     void shouldFindGuestByEmail() throws DataException {
-        List<Guest> guests = service.findGuestByEmail("test1@gmail.com");
+        List<Guest> guests = service.findByEmail("guest1@gmail.com");
         assertEquals(1, guests.size());
-        //System.out.println(guests.get(0).getEmail());
     }
 
-    /*@Test
+    @Test
     void shouldFindAllGuests() throws DataException {
-        List<Guest> guests = service.findAllGuest();
-        assertEquals(1, guests.size());
-        //System.out.println(guests.get(0).getEmail());
-    }*/
+        List<Guest> guests = service.findAll();
+        assertEquals(3, guests.size());
+    }
+
+    @Test
+    void shouldFindGuestById() throws DataException {
+        Guest guest = service.findById("1");
+        assertEquals("Test 1", guest.getFirst_name());
+    }
+
+
 
 
 
