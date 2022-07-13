@@ -2,16 +2,20 @@ package learn.mastery.Model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.EnumSet;
+import java.util.Set;
 
 public class Reservation {
 
     private String id;
     private LocalDate start_date;
     private LocalDate end_date;
-    private Guest guest_id;
+    private BigDecimal total;
+
+    private Guest guest;
     private Host host;
-    private double total;
 
 
     public String getId() {
@@ -38,12 +42,12 @@ public class Reservation {
         this.end_date = end_date;
     }
 
-    public Guest getGuest_id() {
-        return guest_id;
+    public Guest getGuest() {
+        return guest;
     }
 
-    public void setGuest_id(Guest guest_id) {
-        this.guest_id = guest_id;
+    public void setGuest(Guest guest) {
+        this.guest = guest;
     }
 
     public Host getHost() {
@@ -56,18 +60,38 @@ public class Reservation {
 
 
 
-    public void setTotal(double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
     public BigDecimal getTotal() {
-        /*if ((start_date == null || end_date == null) ||
-                (host.getWeekend_rate() > 0 || host.getStandard_rate() > 0)) {
+        if ((start_date == null || end_date == null) ||
+                (host.getWeekend_rate() <= 0 || host.getStandard_rate() <= 0)) {
             return BigDecimal.ZERO;
         }
-        BigDecimal kilos = new BigDecimal(kilograms).setScale(4, RoundingMode.HALF_UP);
-        return item.getDollarPerKilogram().multiply(kilos);*/
-        return null;
+        /*BigDecimal kilos = new BigDecimal(kilograms).setScale(4, RoundingMode.HALF_UP);
+        return item.getDollarPerKilogram().multiply(kilos);
+        return null;*/
+
+        Set<DayOfWeek> weekend = EnumSet.of(DayOfWeek.FRIDAY, DayOfWeek.SATURDAY);
+        final long weekDaysBetween = start_date.datesUntil(end_date)
+                .filter(d -> !weekend.contains(d.getDayOfWeek()))
+                .count();
+        BigDecimal weekDayCost = BigDecimal.valueOf(weekDaysBetween * (host.getStandard_rate()) );
+
+        Set<DayOfWeek> weekday = EnumSet.of(
+                DayOfWeek.SUNDAY,
+                DayOfWeek.MONDAY,
+                DayOfWeek.TUESDAY,
+                DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY);
+        final long weekEndsBetween = start_date.datesUntil(end_date)
+                .filter(d -> !weekday.contains(d.getDayOfWeek()))
+                .count();
+        BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
+
+        total = weekEndCost.add(weekDayCost);
+        return total;
     }
 
 
