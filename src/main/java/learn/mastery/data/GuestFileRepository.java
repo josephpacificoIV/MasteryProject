@@ -1,12 +1,12 @@
 package learn.mastery.data;
 
 import learn.mastery.Model.Guest;
+import learn.mastery.Model.Host;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GuestFileRepository implements GuestRepository {
 
@@ -18,7 +18,7 @@ public class GuestFileRepository implements GuestRepository {
     }
 
     @Override
-    public List<Guest> findAll() {
+    public List<Guest> findAllGuest() {
         ArrayList<Guest> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 
@@ -38,12 +38,23 @@ public class GuestFileRepository implements GuestRepository {
     }
 
     @Override
-    public Guest findById(String id) {
-        return findAll().stream()
+    public Guest findGuestById(String id) {
+        return findAllGuest().stream()
                 .filter(i -> i.getGuest_id().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
     }
+
+    @Override
+    public Guest findGuestByEmail(String email) {
+        return findAllGuest().stream()
+                .filter(i -> Objects.equals(i.getEmail(), email))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
 
     private String serialize(Guest guest) {
         return String.format("%s,%s,%s,%s,%s,%s",
@@ -64,6 +75,24 @@ public class GuestFileRepository implements GuestRepository {
         result.setPhone(fields[4]);
         result.setState(fields[5]);
         return result;
+    }
+
+    protected void writeAll(List<Guest> guests) throws DataException {
+        try (PrintWriter writer = new PrintWriter(filePath)) {
+
+            writer.println(HEADER);
+
+            if (guests == null) {
+                return;
+            }
+
+            for (Guest guest : guests) {
+                writer.println(serialize(guest));
+            }
+
+        } catch (FileNotFoundException ex) {
+            throw new DataException(ex);
+        }
     }
 
 

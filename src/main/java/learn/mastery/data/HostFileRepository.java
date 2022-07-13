@@ -2,9 +2,7 @@ package learn.mastery.data;
 
 import learn.mastery.Model.Host;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +72,24 @@ public class HostFileRepository implements HostRepository{
         result.setStandard_rate(Double.parseDouble(fields[8]));
         result.setWeekend_rate(Double.parseDouble(fields[9]));
         return result;
+    }
+
+    protected void writeAll(List<Host> hosts) throws DataException {
+        try (PrintWriter writer = new PrintWriter(filePath)) {
+
+            writer.println(HEADER);
+
+            if (hosts == null) {
+                return;
+            }
+
+            for (Host host : hosts) {
+                writer.println(serialize(host));
+            }
+
+        } catch (FileNotFoundException ex) {
+            throw new DataException(ex);
+        }
     }
 
 

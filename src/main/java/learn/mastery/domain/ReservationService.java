@@ -62,7 +62,7 @@ public class ReservationService {
             result.addErrorMessage("Host does not exist.");
         }
 
-        if (guestRepository.findById(reservation.getGuest_id().getGuest_id()) == null) {
+        if (guestRepository.findGuestById(reservation.getGuest_id().getGuest_id()) == null) {
             result.addErrorMessage("Guest does not exist.");
         }
     }

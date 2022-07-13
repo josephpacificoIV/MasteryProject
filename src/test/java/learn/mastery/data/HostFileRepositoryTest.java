@@ -32,10 +32,14 @@ class HostFileRepositoryTest {
     void shouldFindAllHosts() {
         List<Host> all = repository.findAll();
         assertEquals(4, all.size());
-
     }
-
     @Test
-    void findById() {
+    void shouldFindHostById() {
+        Host host = repository.findById("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        assertEquals("3edda6bc-ab95-49a8-8962-d50b53f84b15", host.getId());
     }
+
+
+
+
 }
