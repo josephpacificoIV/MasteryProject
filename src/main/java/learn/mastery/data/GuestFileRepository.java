@@ -52,19 +52,6 @@ public class GuestFileRepository implements GuestRepository {
                 .orElse(null);
     }
 
-
-
-
-    private String serialize(Guest guest) {
-        return String.format("%s,%s,%s,%s,%s,%s",
-                guest.getId(),
-                guest.getFirst_name(),
-                guest.getLast_name(),
-                guest.getEmail(),
-                guest.getPhone(),
-                guest.getState());
-    }
-
     private Guest deserialize(String[] fields) {
         Guest result = new Guest();
         result.setId(fields[0]);
@@ -74,6 +61,16 @@ public class GuestFileRepository implements GuestRepository {
         result.setPhone(fields[4]);
         result.setState(fields[5]);
         return result;
+    }
+
+    /*private String serialize(Guest guest) {
+        return String.format("%s,%s,%s,%s,%s,%s",
+                guest.getId(),
+                guest.getFirst_name(),
+                guest.getLast_name(),
+                guest.getEmail(),
+                guest.getPhone(),
+                guest.getState());
     }
 
     protected void writeAll(List<Guest> guests) throws DataException {
@@ -92,7 +89,7 @@ public class GuestFileRepository implements GuestRepository {
         } catch (FileNotFoundException ex) {
             throw new DataException(ex);
         }
-    }
+    }*/
 
 
 }

@@ -56,21 +56,9 @@ public class HostFileRepository implements HostRepository{
                 .orElse(null);
     }
 
-    private String serialize(Host host) {
-        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                host.getId(),
-                host.getLast_name(),
-                host.getEmail(),
-                host.getPhone(),
-                host.getAddress(),
-                host.getCity(),
-                host.getState(),
-                host.getPostal_code(),
-                host.getStandard_rate(),
-                host.getWeekend_rate());
-    }
 
-    private Host deserialize(String[] fields) {
+
+    /*private Host deserialize(String[] fields) {
         Host result = new Host();
         result.setId(fields[0]);
         result.setLast_name(fields[1]);
@@ -83,6 +71,44 @@ public class HostFileRepository implements HostRepository{
         result.setStandard_rate(new BigDecimal(fields[8]));
         result.setWeekend_rate(new BigDecimal(fields[9]));
         return result;
+    }*/
+
+    private Host deserialize(String[] fields) {
+        // 6 fields for reservation, need 6 result.set
+        //x 5 fields in a reservation file, need 5 fields[] sets
+        // id, start_date, end_date
+        Host result = new Host();
+
+        result.setId(fields[0]);
+        result.setLast_name(fields[1]);
+        result.setEmail(fields[2]);
+        result.setPhone(fields[3]);
+        result.setAddress(fields[4]);
+        result.setCity(fields[5]);
+        result.setState(fields[6]);
+        result.setPostal_code(fields[7]);
+        result.setStandard_rate(new BigDecimal(fields[8]));
+        result.setWeekend_rate(new BigDecimal(fields[9]));
+
+        /*if (Objects.equals(result.getEmail(), email)) {
+            System.out.println("We found this host: ");
+
+        }*/
+        return result;
+    }
+
+    /*private String serialize(Host host) {
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                host.getId(),
+                host.getLast_name(),
+                host.getEmail(),
+                host.getPhone(),
+                host.getAddress(),
+                host.getCity(),
+                host.getState(),
+                host.getPostal_code(),
+                host.getStandard_rate(),
+                host.getWeekend_rate());
     }
 
     protected void writeAll(List<Host> hosts) throws DataException {
@@ -101,7 +127,7 @@ public class HostFileRepository implements HostRepository{
         } catch (FileNotFoundException ex) {
             throw new DataException(ex);
         }
-    }
+    }*/
 
 
 }

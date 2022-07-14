@@ -24,32 +24,28 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
     @Override
-    public List<Host> findByEmail(String email) {
-
-        List<Host> result = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(getHosts()))) {
+    public List<Reservation> findById(String id) {
+        ArrayList<Reservation> result = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath(id)))) {
 
             reader.readLine(); // read header
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 
                 String[] fields = line.split(",", -1);
-                if (fields.length == 10) {
-                    result.add(deserialize(fields, email));
+                if (fields.length == 5) {
+                    result.add(deserialize(fields, id));
                 }
             }
         } catch (IOException ex) {
             // don't throw on read
         }
-
-
-        return result.stream()
-                .filter(i -> Objects.equals(i.getEmail(), email))
-                .collect(Collectors.toList());
-
+        return result;
     }
 
-    public Reservation findById(List<Reservation> reservations, String id) {
+
+
+    public Reservation findReservationById(List<Reservation> reservations, String id) {
         return reservations.stream()
                 .filter(i -> Objects.equals(i.getId(), id))
                 .findFirst()
@@ -58,14 +54,14 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
 
-
-
     private String getFilePath(String host) {
         return Paths.get(directory, host + ".csv").toString();
     }
-    private String getHosts() {
+
+
+    /*private String getHosts() {
         return Paths.get("./data/", "hosts.csv").toString();
-    }
+    }*/
 
     /*private void writeAll(List<Reservation> reservations, String host) throws DataException {
         try (PrintWriter writer = new PrintWriter(getFilePath(host))) {
@@ -89,27 +85,29 @@ public class ReservationFileRepository implements ReservationRepository{
                 guest.getTotal());
     }*/
 
-    private Host deserialize(String[] fields, String email) {
+    private Reservation deserialize(String[] fields, String id) {
         // 6 fields for reservation, need 6 result.set
         //x 5 fields in a reservation file, need 5 fields[] sets
         // id, start_date, end_date
-        Host result = new Host();
+        Reservation result = new Reservation();
 
         result.setId(fields[0]);
-        result.setLast_name(fields[1]);
-        result.setEmail(fields[2]);
-        result.setPhone(fields[3]);
-        result.setAddress(fields[4]);
-        result.setCity(fields[5]);
-        result.setState(fields[6]);
-        result.setPostal_code(fields[7]);
-        result.setStandard_rate(new BigDecimal(fields[8]));
-        result.setWeekend_rate(new BigDecimal(fields[9]));
+        result.setStart_date(LocalDate.parse(fields[1]));
+        result.setEnd_date(LocalDate.parse(fields[2]));
 
-        if(Objects.equals(result.getEmail(), email)){
-            System.out.println("We found this host: ");
+        Guest guest = new Guest();
+        guest.setId(fields[3]);
+        result.setGuest(guest);
 
-        }
+        Host host = new Host();
+        host.setId(id);
+        result.setHost(host);
+        result.setTotal(new BigDecimal(fields[4]));
+
+        return result;
+        // return null;
+    }
+
 
 
         /*result.setStart_date(LocalDate.parse(fields[1]));
@@ -139,9 +137,7 @@ public class ReservationFileRepository implements ReservationRepository{
 
         result.setHost(host);*/
 
-        return result;
-       // return null;
-    }
+
 
 
 }

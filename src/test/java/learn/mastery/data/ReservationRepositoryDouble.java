@@ -26,19 +26,20 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         reservations.add(reservation);
     }
 
-    @Override
-    public List<Reservation> findByEmail(String email) {
-        return reservations.stream()
-                .filter(i -> Objects.equals(i.getId(), email))
-                .collect(Collectors.toList());
-    }
 
     @Override
-    public Reservation findById(List<Reservation> reservations, String id) {
+    public Reservation findReservationById(List<Reservation> reservations, String id) {
         return reservations.stream()
                 .filter(i -> Objects.equals(i.getId(), id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<Reservation> findById(String id) {
+        return reservations.stream()
+                .filter(i -> i.getId().equals(id))
+                .collect(Collectors.toList());
     }
 
 

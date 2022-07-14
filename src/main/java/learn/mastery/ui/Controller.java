@@ -61,8 +61,9 @@ public class Controller {
 
     private void viewReservationByHost() {
         String email = view.getHostEmail();
-        List<Host> host = reservationService.findByHost(email);
+        List<Host> host = hostService.findByEmail(email);
         view.displayReservations(host);
+
         view.enterToContinue();
     }
 
