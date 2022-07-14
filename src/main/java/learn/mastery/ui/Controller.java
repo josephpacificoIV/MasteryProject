@@ -1,5 +1,6 @@
 package learn.mastery.ui;
 
+import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 import learn.mastery.data.DataException;
@@ -71,8 +72,24 @@ public class Controller {
     }
 
 
-    private void createReservation() {
+    private void createReservation() throws DataException {
+        // display all reservations for a host
+        String email = view.getHostEmail();
+        Host host = hostService.findByEmail(email);
+
+        String id = view.displayHost(host);
+        List<Reservation> reservations = reservationService.findById(id);
+        view.displayReservations(reservations, id);
+
+        // new reservation inputs
+        String emailGuest = view.getGuestEmail();
+        Guest guest = guestService.findByEmail(emailGuest);
+
+        view.makeReservation(host,guest);
+
     }
+
+
 
 
     private void updateReservation() {

@@ -1,8 +1,10 @@
 package learn.mastery.ui;
 
+import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class View {
@@ -37,12 +39,16 @@ public class View {
         return io.readRequiredString("Enter Host Email : ");
     }
 
+    public String getGuestEmail() {
+        displayHeader(MainMenuOption.CREATE_RESERVATION.getMessage());
+        return io.readRequiredString("Enter Host Email : ");
+    }
+
     public String displayHost(Host host) {
         if (host == null) {
             io.println("No hosts found.");
             return null;
         }
-
 
             //io.println(getHostEmail());
             io.printf("%nHost Email: %s%n%s: %s,%s%n",
@@ -54,8 +60,6 @@ public class View {
             //displayReservations(host.getId());
 
             return host.getId();
-
-
     }
 
     public void displayReservations(List<Reservation> reservations, String id) {
@@ -75,8 +79,27 @@ public class View {
                     reservation.getGuest().getEmail());
         }
 
-
     }
+
+
+    public Reservation makeReservation(Host host, Guest guest) {
+        Reservation reservation = new Reservation();
+
+        reservation.setStart_date(io.readLocalDate("Start date [MM/dd/yyyy]: "));
+        reservation.setEnd_date(io.readLocalDate("End date [MM/dd/yyyy]: "));
+        reservation.setHost(host);
+        reservation.setGuest(guest);
+
+        BigDecimal total = reservation.getTotal();
+        reservation.setTotal(total);
+        System.out.println(total);
+
+        return reservation;
+    }
+
+
+
+
 
 
     public void enterToContinue() {

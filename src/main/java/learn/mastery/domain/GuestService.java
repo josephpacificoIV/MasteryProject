@@ -17,10 +17,11 @@ public class GuestService {
         this.repository = repository;
     }
 
-    public List<Guest> findByEmail(String email) throws DataException {
+    public Guest findByEmail(String email) throws DataException {
         return repository.findAll().stream()
-                .filter(i -> Objects.equals(i.getEmail(), email))
-                .collect(Collectors.toList());
+                .filter(i -> i.getEmail().startsWith(email))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Guest> findAll() throws DataException {
