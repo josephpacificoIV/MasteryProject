@@ -21,19 +21,24 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         reservation.setEnd_date(LocalDate.of(2021, 10, 14));
         reservation.setGuest(new Guest());
         reservation.setTotal(new BigDecimal(400));
+
+
         reservations.add(reservation);
     }
 
     @Override
-    public List<Reservation> findByHost(String id) {
-        return null;
+    public List<Reservation> findByEmail(String email) {
+        return reservations.stream()
+                .filter(i -> Objects.equals(i.getId(), email))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Reservation findById(List<Reservation> reservations, int id) {
+    public Reservation findById(List<Reservation> reservations, String id) {
         return reservations.stream()
                 .filter(i -> Objects.equals(i.getId(), id))
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElse(null);
     }
 
 

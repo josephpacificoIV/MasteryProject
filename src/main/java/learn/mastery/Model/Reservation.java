@@ -1,7 +1,6 @@
 package learn.mastery.Model;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.EnumSet;

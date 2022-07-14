@@ -1,5 +1,10 @@
 package learn.mastery.ui;
 
+import learn.mastery.Model.Host;
+import learn.mastery.Model.Reservation;
+
+import java.util.List;
+
 public class View {
 
     private final ConsoleIO io;
@@ -24,6 +29,33 @@ public class View {
         String message = String.format("Select [%s-%s]: ", min, max - 1);
         return MainMenuOption.fromValue(io.readInt(message, min, max));
     }
+
+
+
+    public String getHostEmail() {
+        displayHeader(MainMenuOption.VIEW_RESERVATIONS.getMessage());
+        return io.readRequiredString("Enter Host Email : ");
+    }
+
+    public void displayReservations(List<Host> hosts) {
+        if (hosts == null) {
+            io.println("No hosts found.");
+            return;
+        }
+
+        for (Host host : hosts){
+            //io.println(getHostEmail());
+            io.printf("%nHost Email: %s%n%s: %s,%s%n",
+                    host.getEmail(),
+                    host.getLast_name(),
+                    host.getCity(),
+                    host.getState()
+                    );
+        }
+
+
+    }
+
 
     public void enterToContinue() {
         io.readString("Press [Enter] to continue.");

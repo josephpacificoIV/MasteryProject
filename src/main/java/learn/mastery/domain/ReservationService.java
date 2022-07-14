@@ -1,9 +1,11 @@
 package learn.mastery.domain;
 
-import learn.mastery.Model.Reservation;
+import learn.mastery.Model.Host;
 import learn.mastery.data.GuestRepository;
 import learn.mastery.data.HostRepository;
 import learn.mastery.data.ReservationRepository;
+
+import java.util.List;
 
 public class ReservationService {
 
@@ -19,9 +21,14 @@ public class ReservationService {
         this.guestRepository = guestRepository;
     }
 
+    public List<Host> findByHost(String email) {
+
+        return reservationRepository.findByEmail(email);
+    }
 
 
-    private Result<Reservation> validate(Reservation reservation) {
+
+    /*private Result<Reservation> validate(Reservation reservation) {
 
         Result<Reservation> result = validateNulls(reservation);
         if (!result.isSuccess()) {
@@ -41,7 +48,7 @@ public class ReservationService {
             return result;
         }
 
-        /*if (reservation.getDate() == null) {
+        *//*if (reservation.getDate() == null) {
             result.addErrorMessage("Forage date is required.");
         }
 
@@ -51,7 +58,7 @@ public class ReservationService {
 
         if (reservation.getItem() == null) {
             result.addErrorMessage("Item is required.");
-        }*/
+        }*//*
         return result;
     }
 
@@ -65,5 +72,5 @@ public class ReservationService {
         if (guestRepository.findById(reservation.getGuest().getId()) == null) {
             result.addErrorMessage("Guest does not exist.");
         }
-    }
+    }*/
 }

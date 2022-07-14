@@ -45,22 +45,22 @@ class ReservationFileRepositoryTest {
 
     @Test
     void shouldFindByHost() {
-        List<Reservation> reservations = repository.findByHost(id);
+        List<Reservation> reservations = repository.findByEmail(id);
         assertEquals(RESERVATION_COUNT, reservations.size());
     }
 
     @Test
     void shouldFindReservationByHost() {
-        List<Reservation> reservations = repository.findByHost(id);
-        Reservation reservation = repository.findById(reservations, 1);
+        List<Reservation> reservations = repository.findByEmail(id);
+        Reservation reservation = repository.findById(reservations, "1");
 
         assertEquals(LocalDate.of(2021, 10, 12), reservation.getStart_date());
-        System.out.printf("%s %s %s %s %s %s",
+        System.out.printf("%s %s %s %s %s",
                 reservation.getId(),
                 reservation.getStart_date(),
                 reservation.getEnd_date(),
                 reservation.getGuest().getId(),
-                reservation.getTotal(),
+                //reservation.getTotal(),
                 reservation.getGuest().getEmail());
     }
 

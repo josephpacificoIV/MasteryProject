@@ -1,9 +1,13 @@
 package learn.mastery.ui;
 
+import learn.mastery.Model.Host;
+import learn.mastery.Model.Reservation;
 import learn.mastery.data.DataException;
 import learn.mastery.domain.GuestService;
 import learn.mastery.domain.HostService;
 import learn.mastery.domain.ReservationService;
+
+import java.util.List;
 
 public class Controller {
     private final ReservationService reservationService;
@@ -39,7 +43,7 @@ public class Controller {
             option = view.selectMainMenuOption();
             switch (option) {
                 case VIEW_RESERVATIONS:
-                    viewByReservation();
+                    viewReservationByHost();
                     break;
                 case CREATE_RESERVATION:
                     createReservation();
@@ -55,17 +59,23 @@ public class Controller {
     }
 
 
-
-    private void deleteReservation() {
+    private void viewReservationByHost() {
+        String email = view.getHostEmail();
+        List<Host> host = reservationService.findByHost(email);
+        view.displayReservations(host);
+        view.enterToContinue();
     }
 
-    private void updateReservation() {
-    }
 
     private void createReservation() {
     }
 
-    private void viewByReservation() {
 
+    private void updateReservation() {
     }
+
+    private void deleteReservation() {
+    }
+
+
 }

@@ -7,13 +7,11 @@ import learn.mastery.Model.Reservation;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ReservationFileRepository implements ReservationRepository{
 
@@ -26,40 +24,50 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
     @Override
-    public List<Reservation> findByHost(String id) {
-        ArrayList<Reservation> result = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath(id)))) {
+    public List<Host> findByEmail(String email) {
+
+        List<Host> result = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(getHosts()))) {
 
             reader.readLine(); // read header
 
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
 
                 String[] fields = line.split(",", -1);
-                if (fields.length == 5) {
-                    result.add(deserialize(fields, id));
+                if (fields.length == 10) {
+                    result.add(deserialize(fields, email));
                 }
             }
         } catch (IOException ex) {
             // don't throw on read
         }
-        return result;
+
+
+        return result.stream()
+                .filter(i -> Objects.equals(i.getEmail(), email))
+                .collect(Collectors.toList());
+
     }
 
-    @Override
-    public Reservation findById(List<Reservation> reservations, int id) {
+    public Reservation findById(List<Reservation> reservations, String id) {
         return reservations.stream()
-                .filter(i -> i.getId().equalsIgnoreCase(String.valueOf(id)))
+                .filter(i -> Objects.equals(i.getId(), id))
                 .findFirst()
                 .orElse(null);
 
     }
 
 
+
+
     private String getFilePath(String host) {
         return Paths.get(directory, host + ".csv").toString();
     }
+    private String getHosts() {
+        return Paths.get("./data/", "hosts.csv").toString();
+    }
 
-    private void writeAll(List<Reservation> reservations, String host) throws DataException {
+    /*private void writeAll(List<Reservation> reservations, String host) throws DataException {
         try (PrintWriter writer = new PrintWriter(getFilePath(host))) {
 
             writer.println(HEADER);
@@ -70,29 +78,42 @@ public class ReservationFileRepository implements ReservationRepository{
         } catch (FileNotFoundException ex) {
             throw new DataException(ex);
         }
-    }
+    }*/
 
-    private String serialize(Reservation guest) {
+    /*private String serialize(Reservation guest) {
         return String.format("%s,%s,%s,%s,%s",
                 guest.getId(),
                 guest.getStart_date(),
                 guest.getEnd_date(),
                 guest.getGuest(),
                 guest.getTotal());
-    }
+    }*/
 
-    private Reservation deserialize(String[] fields, String id) {
+    private Host deserialize(String[] fields, String email) {
         // 6 fields for reservation, need 6 result.set
         //x 5 fields in a reservation file, need 5 fields[] sets
         // id, start_date, end_date
-        Reservation result = new Reservation();
+        Host result = new Host();
 
-        // what ID do I put here?
         result.setId(fields[0]);
+        result.setLast_name(fields[1]);
+        result.setEmail(fields[2]);
+        result.setPhone(fields[3]);
+        result.setAddress(fields[4]);
+        result.setCity(fields[5]);
+        result.setState(fields[6]);
+        result.setPostal_code(fields[7]);
+        result.setStandard_rate(new BigDecimal(fields[8]));
+        result.setWeekend_rate(new BigDecimal(fields[9]));
 
-        result.setStart_date(LocalDate.parse(fields[1]));
+        if(Objects.equals(result.getEmail(), email)){
+            System.out.println("We found this host: ");
+
+        }
+
+
+        /*result.setStart_date(LocalDate.parse(fields[1]));
         result.setEnd_date(LocalDate.parse(fields[2]));
-
 
         // guest_id comes from guests.csv
         Guest guest = new Guest();
@@ -100,9 +121,9 @@ public class ReservationFileRepository implements ReservationRepository{
         result.setGuest(guest);
 
         // getTotal() method in Host
-        /*Host host1 = new Host();
+        *//*Host host1 = new Host();
         BigDecimal total = host1.setTotal();
-        result.setTotal(total);*/
+        result.setTotal(total);*//*
 
         // or
 
@@ -113,10 +134,10 @@ public class ReservationFileRepository implements ReservationRepository{
         Host host = new Host();
         host.setId(id);
         // need a new method that will find host in hosts.csv
-        
+
         //
 
-        result.setHost(host);
+        result.setHost(host);*/
 
         return result;
        // return null;
