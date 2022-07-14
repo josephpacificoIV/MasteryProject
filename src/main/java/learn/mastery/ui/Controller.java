@@ -86,6 +86,7 @@ public class Controller {
         Guest guest = guestService.findByEmail(emailGuest);
 
         view.makeReservation(host,guest);
+        reservationService.add(host, guest);
 
     }
 

@@ -3,12 +3,12 @@ package learn.mastery.domain;
 import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
+import learn.mastery.data.DataException;
 import learn.mastery.data.GuestRepository;
 import learn.mastery.data.HostRepository;
 import learn.mastery.data.ReservationRepository;
 
 import java.math.BigDecimal;
-import java.sql.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
@@ -85,19 +85,36 @@ public class ReservationService {
         return total;*/
     }
 
+    public Result<Reservation> add(Reservation reservation) throws DataException {
+        Result<Reservation> result = validate(reservation);
+        if (!result.isSuccess()) {
+            return result;
+        }
 
+        result.setPayload(reservationRepository.add(reservation));
 
+        return result;
+    }
 
-
-    /*private Result<Reservation> validate(Reservation reservation) {
+    private Result<Reservation> validate(Reservation reservation) {
 
         Result<Reservation> result = validateNulls(reservation);
         if (!result.isSuccess()) {
             return result;
         }
 
-        validateChildrenExist(reservation, result);
+        /*// check for duplicates
+        validateDuplicate(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }*/
 
+        validateFields(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        validateChildrenExist(reservation, result);
         return result;
     }
 
@@ -109,29 +126,63 @@ public class ReservationService {
             return result;
         }
 
-        *//*if (reservation.getDate() == null) {
-            result.addErrorMessage("Forage date is required.");
+        if (reservation.getStart_date() == null) {
+            result.addErrorMessage("Reservation start date is required.");
         }
 
-        if (reservation.getForager() == null) {
-            result.addErrorMessage("Forager is required.");
+        if (reservation.getEnd_date() == null) {
+            result.addErrorMessage("Reservation end date is required.");
         }
 
-        if (reservation.getItem() == null) {
-            result.addErrorMessage("Item is required.");
-        }*//*
+        if (reservation.getGuest() == null) {
+            result.addErrorMessage("Guest is required.");
+        }
         return result;
     }
 
+    /*private void validateDuplicate(Reservation reservation, Result<Reservation> result){
+        List<Forage> forages = forageRepository.findByDate(reservation.getDate());
+        for (Forage f : forages) {
+            if (Objects.equals(reservation.getDate(), f.getDate())
+                    && Objects.equals(reservation.getForager().getId(), f.getForager().getId())
+                    && Objects.equals(reservation.getItem().getId(), f.getItem().getId())) {
+                result.addErrorMessage(String.format("Forager %s %s (%s) with Item: %s is a duplicate.",
+                        reservation.getForager().getFirstName(),
+                        reservation.getForager().getLastName(),
+                        reservation.getForager().getState(),
+                        reservation.getItem().getName()));
+                duplicate = ForageFileRepository.duplicate;
+                break;
+            }
+        }
+
+    }*/
+
+    private void validateFields(Reservation reservation, Result<Reservation> result) {
+        // No future dates.
+        if (reservation.getStart_date().isAfter(LocalDate.now())) {
+            result.addErrorMessage("Forage date cannot be in the future.");
+        }
+
+        if (reservation.getKilograms() <= 0 || reservation.getKilograms() > 250.0) {
+            result.addErrorMessage("Kilograms must be a positive number less than 250.0");
+        }
+
+    }
+
+
     private void validateChildrenExist(Reservation reservation, Result<Reservation> result) {
 
-        if (reservation.getHost().getId() == null
-                || hostRepository.findById(reservation.getHost().getId()) == null) {
-            result.addErrorMessage("Host does not exist.");
+        if (reservation.getForager().getId() == null
+                || foragerRepository.findById(reservation.getForager().getId()) == null) {
+            result.addErrorMessage("Forager does not exist.");
         }
 
-        if (guestRepository.findById(reservation.getGuest().getId()) == null) {
-            result.addErrorMessage("Guest does not exist.");
+        if (itemRepository.findById(reservation.getItem().getId()) == null) {
+            result.addErrorMessage("Item does not exist.");
         }
     }*/
+
+
+
 }

@@ -87,13 +87,17 @@ public class Reservation {
         final long weekEndsBetween = start_date.datesUntil(end_date)
                 .filter(d -> !weekday.contains(d.getDayOfWeek()))
                 .count();
-        System.out.printf("%nSummary:%n==========%nWeek Days(%s) @ $%s/per night%nWeek End Days(%s) @ $%s/per night%nTotal: $",
+        BigDecimal totalcost = standard.multiply(new BigDecimal(weekDaysBetween)).add(weekend.multiply(new BigDecimal(weekEndsBetween)));
+
+        System.out.printf("%nSummary:%n==========%nWeek Days(%s) @ $%s/per night%nWeek End Days(%s) @ $%s/per night%nTotal: $%s",
                 weekDaysBetween,
                 standard,
                 weekEndsBetween,
-                weekend);
+                weekend,
+                totalcost);
         //BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
-        return standard.multiply(new BigDecimal(weekDaysBetween)).add(weekend.multiply(new BigDecimal(weekEndsBetween)));
+
+        return totalcost;
         /*total = weekEndCost.add(weekDayCost);
         return total;*/
     }

@@ -87,12 +87,13 @@ public class View {
 
         reservation.setStart_date(io.readLocalDate("Start date [MM/dd/yyyy]: "));
         reservation.setEnd_date(io.readLocalDate("End date [MM/dd/yyyy]: "));
-        reservation.setHost(host);
-        reservation.setGuest(guest);
 
         BigDecimal total = reservation.getTotal();
         reservation.setTotal(total);
         System.out.println(total);
+
+        reservation.setHost(host);
+        reservation.setGuest(guest);
 
         return reservation;
     }

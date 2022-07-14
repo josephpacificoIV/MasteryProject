@@ -11,12 +11,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ReservationFileRepository implements ReservationRepository{
 
     private static final String HEADER = "id,start_date,end_date,guest_id,total";
     private final String directory;
+
+    public static boolean duplicate = false;
 
 
     public ReservationFileRepository(String directory) {
@@ -59,31 +60,68 @@ public class ReservationFileRepository implements ReservationRepository{
     }
 
 
+    public Reservation add(Reservation reservation) throws DataException {
+
+        List<Reservation> all = findById(reservation.getId());
+        // create next ID
+        int nextId = 0;
+        for(Reservation r: all){
+            nextId = Math.max(nextId, Integer.parseInt(r.getId()));
+        }
+        nextId++;
+        reservation.setId(String.valueOf(nextId));
+
+        //reservation.setId(java.util.UUID.randomUUID().toString());
+
+
+        //List<Forage> forages = findByDate(forage.getDate());
+        for (Reservation r : all) {
+            if (
+                    ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
+                    || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()) )
+                    || ( reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
+                    || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
+            ){
+                System.out.println(String.format("Reservations cannot overlap. %s - %s",
+                        reservation.getStart_date(),
+                        reservation.getEnd_date()));
+                duplicate = true;
+                break;
+            } else {
+                duplicate = false;
+            }
+        }
+
+        all.add(reservation);
+        writeAll(all, reservation.getHost().getId());
+
+        return reservation;
+    }
     /*private String getHosts() {
         return Paths.get("./data/", "hosts.csv").toString();
     }*/
 
-    /*private void writeAll(List<Reservation> reservations, String host) throws DataException {
+    private void writeAll(List<Reservation> reservations, String host) throws DataException {
         try (PrintWriter writer = new PrintWriter(getFilePath(host))) {
 
             writer.println(HEADER);
 
-            for (Reservation guest : reservations) {
-                writer.println(serialize(guest));
+            for (Reservation reservation : reservations) {
+                writer.println(serialize(reservation));
             }
         } catch (FileNotFoundException ex) {
             throw new DataException(ex);
         }
-    }*/
+    }
 
-    /*private String serialize(Reservation guest) {
+    private String serialize(Reservation reservation) {
         return String.format("%s,%s,%s,%s,%s",
-                guest.getId(),
-                guest.getStart_date(),
-                guest.getEnd_date(),
-                guest.getGuest(),
-                guest.getTotal());
-    }*/
+                reservation.getId(),
+                reservation.getStart_date(),
+                reservation.getEnd_date(),
+                reservation.getGuest().getId(),
+                reservation.getTotal());
+    }
 
     private Reservation deserialize(String[] fields, String id) {
         // 6 fields for reservation, need 6 result.set
