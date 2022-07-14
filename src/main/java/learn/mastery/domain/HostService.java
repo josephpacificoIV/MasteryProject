@@ -19,10 +19,11 @@ public class HostService {
         this.repository = repository;
     }
 
-    public List<Host> findByEmail(String email) {
+    public Host findByEmail(String email) {
         return repository.findAll().stream()
                 .filter(i -> i.getEmail().startsWith(email))
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Host> findAllHosts() throws DataException {

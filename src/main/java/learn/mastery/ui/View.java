@@ -37,13 +37,13 @@ public class View {
         return io.readRequiredString("Enter Host Email : ");
     }
 
-    public void displayReservations(List<Host> hosts) {
-        if (hosts == null) {
+    public String displayHost(Host host) {
+        if (host == null) {
             io.println("No hosts found.");
-            return;
+            return null;
         }
 
-        for (Host host : hosts){
+
             //io.println(getHostEmail());
             io.printf("%nHost Email: %s%n%s: %s,%s%n",
                     host.getEmail(),
@@ -51,9 +51,29 @@ public class View {
                     host.getCity(),
                     host.getState()
                     );
+            //displayReservations(host.getId());
+
+            return host.getId();
+
+
+    }
+
+    public void displayReservations(List<Reservation> reservations, String id) {
+        if (id == null || reservations.isEmpty()) {
+            io.println("No reservations found.");
+            return;
         }
 
-        
+        for (Reservation reservation : reservations) {
+            //io.println(getHostEmail());
+            io.printf("%nID: %s, %s - %s Guest:%s, %s, %s%n",
+                    reservation.getId(),
+                    reservation.getStart_date(),
+                    reservation.getEnd_date(),
+                    reservation.getGuest().getLast_name(),
+                    reservation.getGuest().getFirst_name(),
+                    reservation.getGuest().getEmail());
+        }
 
 
     }
