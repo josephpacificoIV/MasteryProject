@@ -41,7 +41,7 @@ public class View {
 
     public String getGuestEmail() {
         displayHeader(MainMenuOption.CREATE_RESERVATION.getMessage());
-        return io.readRequiredString("Enter Host Email : ");
+        return io.readRequiredString("Enter Guest Email : ");
     }
 
     public String displayHost(Host host) {
@@ -88,12 +88,12 @@ public class View {
         reservation.setStart_date(io.readLocalDate("Start date [MM/dd/yyyy]: "));
         reservation.setEnd_date(io.readLocalDate("End date [MM/dd/yyyy]: "));
 
-        BigDecimal total = reservation.getTotal();
-        reservation.setTotal(total);
-        System.out.println(total);
-
         reservation.setHost(host);
         reservation.setGuest(guest);
+        reservation.setGuest_id(guest.getId());
+
+        // reservation.setId() in ReservationFileRepository,
+        // reservation.setTotal() in ReservationService
 
         return reservation;
     }
@@ -117,5 +117,17 @@ public class View {
     public void displayException(Exception ex) {
         displayHeader("A critical error occurred:");
         io.println(ex.getMessage());
+    }
+
+
+    public void displayStatus(boolean success, String message) {
+        displayStatus(success, List.of(message));
+    }
+
+    public void displayStatus(boolean success, List<String> messages) {
+        displayHeader(success ? "Success" : "Error");
+        for (String message : messages) {
+            io.println(message);
+        }
     }
 }

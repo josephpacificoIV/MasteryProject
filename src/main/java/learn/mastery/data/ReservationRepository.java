@@ -10,4 +10,8 @@ public interface ReservationRepository {
 
     List<Reservation> findById(String id);
 
+    Reservation add(Reservation reservation) throws DataException;
+
+
+
 }

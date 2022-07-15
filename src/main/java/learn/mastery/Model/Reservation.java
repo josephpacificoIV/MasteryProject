@@ -11,10 +11,13 @@ public class Reservation {
     private String id;
     private LocalDate start_date;
     private LocalDate end_date;
+
+    private String guest_id;
     private BigDecimal total;
 
     private Guest guest;
     private Host host;
+
 
 
     public String getId() {
@@ -41,6 +44,22 @@ public class Reservation {
         this.end_date = end_date;
     }
 
+    public String getGuest_id() {
+        return guest_id;
+    }
+
+    public void setGuest_id(String guest_id) {
+        this.guest_id = guest_id;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+
     public Guest getGuest() {
         return guest;
     }
@@ -58,11 +77,8 @@ public class Reservation {
     }
 
 
+    /*public BigDecimal getTotal() {
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-    public BigDecimal getTotal() {
         BigDecimal standard = host.getStandard_rate();
         BigDecimal weekend = host.getWeekend_rate();
 
@@ -76,7 +92,6 @@ public class Reservation {
         final long weekDaysBetween = start_date.datesUntil(end_date)
                 .filter(d -> !weekends.contains(d.getDayOfWeek()))
                 .count();
-        //BigDecimal weekDayCost = BigDecimal.valueOf(weekDaysBetween * (host.getStandard_rate()) );
 
         Set<DayOfWeek> weekday = EnumSet.of(
                 DayOfWeek.SUNDAY,
@@ -95,12 +110,11 @@ public class Reservation {
                 weekEndsBetween,
                 weekend,
                 totalcost);
-        //BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
 
         return totalcost;
-        /*total = weekEndCost.add(weekDayCost);
-        return total;*/
-    }
+
+
+    }*/
 
 
 

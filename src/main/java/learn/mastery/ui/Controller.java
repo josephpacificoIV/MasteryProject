@@ -7,6 +7,7 @@ import learn.mastery.data.DataException;
 import learn.mastery.domain.GuestService;
 import learn.mastery.domain.HostService;
 import learn.mastery.domain.ReservationService;
+import learn.mastery.domain.Result;
 
 import java.util.List;
 
@@ -85,8 +86,21 @@ public class Controller {
         String emailGuest = view.getGuestEmail();
         Guest guest = guestService.findByEmail(emailGuest);
 
-        view.makeReservation(host,guest);
-        reservationService.add(host, guest);
+        Reservation reservation = view.makeReservation(host,guest);
+        Result<Reservation> result = reservationService.add(reservation);
+
+        // check for duplicate
+        boolean duplicate = reservationService.duplicate;
+        if(duplicate){
+            result.addErrorMessage("Duplicate reservation.");
+        }
+
+        if (!result.isSuccess()) {
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            String successMessage = String.format("Reservation %s created.", result.getPayload().getId());
+            view.displayStatus(true, successMessage);
+        }
 
     }
 

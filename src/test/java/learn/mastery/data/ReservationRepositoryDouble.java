@@ -1,13 +1,13 @@
 package learn.mastery.data;
 
 import learn.mastery.Model.Guest;
+import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReservationRepositoryDouble implements ReservationRepository{
@@ -16,12 +16,12 @@ public class ReservationRepositoryDouble implements ReservationRepository{
 
     public ReservationRepositoryDouble() {
         Reservation reservation = new Reservation();
-        reservation.setId("2e72f86c-b8fe-4265-b4f1-304dea8762db");
+        reservation.setId("1");
         reservation.setStart_date(LocalDate.of(2021, 10, 12));
         reservation.setEnd_date(LocalDate.of(2021, 10, 14));
-        reservation.setGuest(new Guest());
-        reservation.setTotal(new BigDecimal(400));
-
+        reservation.setGuest(GuestRepositoryDouble.GUEST);
+        reservation.setHost(HostRepositoryDouble.HOST);
+        reservation.setTotal(new BigDecimal("400"));
 
         reservations.add(reservation);
     }
@@ -41,6 +41,13 @@ public class ReservationRepositoryDouble implements ReservationRepository{
                 .filter(i -> i.getId().equals(id))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Reservation add(Reservation reservation) {
+        return null;
+    }
+
+
 
 
 }

@@ -24,6 +24,7 @@ public class ReservationFileRepository implements ReservationRepository{
         this.directory = directory;
     }
 
+
     @Override
     public List<Reservation> findById(String id) {
         ArrayList<Reservation> result = new ArrayList<>();
@@ -82,9 +83,9 @@ public class ReservationFileRepository implements ReservationRepository{
                     || ( reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
                     || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
             ){
-                System.out.println(String.format("Reservations cannot overlap. %s - %s",
+                System.out.printf("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
-                        reservation.getEnd_date()));
+                        reservation.getEnd_date());
                 duplicate = true;
                 break;
             } else {

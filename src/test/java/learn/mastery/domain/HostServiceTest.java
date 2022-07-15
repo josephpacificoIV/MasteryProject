@@ -26,11 +26,11 @@ class HostServiceTest {
         assertEquals(2, hosts.size());
         System.out.println(hosts.get(1).getEmail());
     }
-    @Test
+    /*@Test
     void shouldFindHostByEmail() throws DataException {
         List<Host> hosts = service.findByEmail("test2@gmail.com");
         assertEquals(1, hosts.size());
         assertEquals("test2@gmail.com", hosts.get(0).getEmail());
-    }
+    }*/
 
 }
