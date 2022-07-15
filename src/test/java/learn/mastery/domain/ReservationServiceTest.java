@@ -38,16 +38,17 @@ class ReservationServiceTest {
         guest.setId("1");
         test.setGuest(guest);
 
-
         Host host = new Host();
-        host.setId("a0d911e7-4fde-4e4a-bdb7-f047f15615e8"); // add existing host
-
+        host.setId("a0d911e7-4fde-4e4a-bdb7-f047f15615e8"); // add existing host from host repository double
         test.setHost(host);
+
         test.setStart_date(LocalDate.of(2022, 8, 10));
         test.setEnd_date(LocalDate.of(2022, 8, 14));
 
         Result<Reservation> result = service.add(test);
         assertTrue(result.isSuccess());
+
+
     }
 
 }

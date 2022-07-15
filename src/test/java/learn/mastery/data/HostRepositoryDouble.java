@@ -24,6 +24,7 @@ public class HostRepositoryDouble implements HostRepository{
             new BigDecimal(425));
 
     public HostRepositoryDouble() {
+        hosts.add(HOST);
         hosts.add(new Host("a0d911e7-4fde-4e4a-bdb7-f047f15615e8",
                 "Test Last",
                 "test2@gmail.com",

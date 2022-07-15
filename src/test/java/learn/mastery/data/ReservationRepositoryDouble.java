@@ -20,10 +20,24 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         reservation.setStart_date(LocalDate.of(2021, 10, 12));
         reservation.setEnd_date(LocalDate.of(2021, 10, 14));
         reservation.setGuest(GuestRepositoryDouble.GUEST);
+        reservation.setGuest_id(GuestRepositoryDouble.GUEST.getId());
         reservation.setHost(HostRepositoryDouble.HOST);
         reservation.setTotal(new BigDecimal("400"));
-
         reservations.add(reservation);
+
+        Reservation reservation1 = new Reservation();
+        reservation1.setId("2");
+        reservation1.setStart_date(LocalDate.of(2022, 10, 12));
+        reservation1.setEnd_date(LocalDate.of(2022, 10, 14));
+        reservation1.setGuest(GuestRepositoryDouble.GUEST);
+        reservation1.setGuest_id(GuestRepositoryDouble.GUEST.getId());
+        Host host = new Host();
+        host.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        reservation1.setHost(host);
+
+        reservation1.setTotal(new BigDecimal("400"));
+
+        reservations.add(reservation1);
     }
 
 

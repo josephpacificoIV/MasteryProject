@@ -52,7 +52,7 @@ public class ReservationService {
             return result;
         }
 
-        // if valid reservation is valid, calculate total
+        // if reservation is valid, calculate total
         BigDecimal total =
                 calculateTotal(reservation.getHost(),
                         reservation.getStart_date(),
