@@ -8,6 +8,7 @@ import learn.mastery.data.GuestRepositoryDouble;
 import learn.mastery.data.HostRepositoryDouble;
 import learn.mastery.data.ReservationRepositoryDouble;
 import org.junit.jupiter.api.Test;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -73,8 +74,33 @@ class ReservationServiceTest {
 
 
     @Test
-    void shouldUpdateReservation() {
-        
+    void shouldUpdateReservation() throws DataException {
+
+        List<Reservation> all = service.findById("2");
+        assertEquals(1, all.size());
+
+        Reservation reservation = all.get(0);
+        assertEquals("2", reservation.getId());
+        assertNotNull(reservation);
+        //System.out.printf("%s %s", reservation.getStart_date(), reservation.getEnd_date());
+
+        // update end date from 2022-10-14
+        reservation.setEnd_date(LocalDate.of(2022, 10, 16));
+
+        // same info as previous reservation
+        reservation.setGuest(GuestRepositoryDouble.GUEST);
+        reservation.setGuest_id(GuestRepositoryDouble.GUEST.getId());
+        Host host = new Host();
+        host.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        reservation.setHost(host);
+        Result<Reservation> result = service.update(reservation);;
+        assertTrue(result.isSuccess());
+
+        List<Reservation> new_all = service.findById("2");
+        Reservation new_reservation = new_all.get(0);
+
+        // assert that new date has been updated
+        assertEquals(LocalDate.of(2022, 10, 16), new_reservation.getEnd_date());
     }
 
 

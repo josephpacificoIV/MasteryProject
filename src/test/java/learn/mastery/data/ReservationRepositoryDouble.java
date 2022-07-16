@@ -62,7 +62,7 @@ public class ReservationRepositoryDouble implements ReservationRepository{
 
     @Override
     public boolean update(Reservation reservation) throws DataException {
-        return false;
+        return findById(reservation.getId()) != null;
     }
 
 
