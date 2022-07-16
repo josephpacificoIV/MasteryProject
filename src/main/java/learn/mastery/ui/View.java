@@ -5,7 +5,10 @@ import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class View {
 
@@ -68,8 +71,9 @@ public class View {
             return;
         }
 
+        reservations.sort(Comparator.comparing(Reservation::getStart_date));
+
         for (Reservation reservation : reservations) {
-            //io.println(getHostEmail());
             io.printf("%nID: %s, %s - %s Guest:%s, %s, %s%n",
                     reservation.getId(),
                     reservation.getStart_date(),
@@ -78,7 +82,6 @@ public class View {
                     reservation.getGuest().getFirst_name(),
                     reservation.getGuest().getEmail());
         }
-
     }
 
 

@@ -20,22 +20,22 @@ class GuestServiceTest {
         service = new GuestService(repository);
     }
 
-    /*@Test
+    @Test
     void shouldFindGuestByEmail() throws DataException {
-        List<Guest> guests = service.findByEmail("guest1@gmail.com");
-        assertEquals(1, guests.size());
-    }*/
+        Guest guest = service.findByEmail("guest2@gmail.com");
+        assertEquals("guest2@gmail.com", guest.getEmail());
+    }
 
     @Test
     void shouldFindAllGuests() throws DataException {
         List<Guest> guests = service.findAll();
-        assertEquals(3, guests.size());
+        assertEquals(2, guests.size());
     }
 
     @Test
     void shouldFindGuestById() throws DataException {
-        Guest guest = service.findById("1");
-        assertEquals("Test 1", guest.getFirst_name());
+        Guest guest = service.findById("2");
+        assertEquals("Test 2", guest.getFirst_name());
     }
 
 

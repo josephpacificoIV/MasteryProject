@@ -51,18 +51,24 @@ public class ReservationService {
         if (!result.isSuccess()) {
             return result;
         }
-
+        System.out.printf("-- Date Range is available --%n");
         // if reservation is valid, calculate total
         BigDecimal total =
                 calculateTotal(reservation.getHost(),
                         reservation.getStart_date(),
                         reservation.getEnd_date());
+        System.out.printf("Summary%n========Start: %s%nEnd: %s%nTotal: $%s",
+                reservation.getStart_date(),
+                reservation.getEnd_date(),
+                total);
         reservation.setTotal(total);
 
         result.setPayload(reservationRepository.add(reservation));
 
         return result;
     }
+
+    
 
     private Result<Reservation> validate(Reservation reservation) {
 
@@ -77,12 +83,12 @@ public class ReservationService {
             return result;
         }*/
 
-        /*validateFields(reservation, result);
+        validateFields(reservation, result);
         if (!result.isSuccess()) {
             return result;
         }
 
-        validateChildrenExist(reservation, result);*/
+        //validateChildrenExist(reservation, result);
 
         return result;
     }
@@ -109,21 +115,8 @@ public class ReservationService {
         return result;
     }
 
-    private void validateDuplicate(Reservation reservation, Result<Reservation> result){
-        /*List<Forage> forages = forageRepository.findByDate(reservation.getDate());
-        for (Forage f : forages) {
-            if (Objects.equals(reservation.getDate(), f.getDate())
-                    && Objects.equals(reservation.getForager().getId(), f.getForager().getId())
-                    && Objects.equals(reservation.getItem().getId(), f.getItem().getId())) {
-                result.addErrorMessage(String.format("Forager %s %s (%s) with Item: %s is a duplicate.",
-                        reservation.getForager().getFirstName(),
-                        reservation.getForager().getLastName(),
-                        reservation.getForager().getState(),
-                        reservation.getItem().getName()));
-                duplicate = ForageFileRepository.duplicate;
-                break;
-            }
-        }*/
+    /*private void validateDuplicate(Reservation reservation, Result<Reservation> result){
+
         List<Reservation> reservations = reservationRepository.findById(reservation.getHost().getId());
         for (Reservation r : reservations) {
             if (( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
@@ -139,19 +132,17 @@ public class ReservationService {
         }
 
 
-    }
-
-    /*private void validateFields(Reservation reservation, Result<Reservation> result) {
-        // No future dates.
-        if (reservation.getStart_date().isAfter(LocalDate.now())) {
-            result.addErrorMessage("Forage date cannot be in the future.");
-        }
-
-        if (reservation.getKilograms() <= 0 || reservation.getKilograms() > 250.0) {
-            result.addErrorMessage("Kilograms must be a positive number less than 250.0");
-        }
-
     }*/
+
+    private void validateFields(Reservation reservation, Result<Reservation> result) {
+        // No past dates.
+        if ( reservation.getStart_date().isBefore(LocalDate.now()) ||
+                reservation.getEnd_date().isBefore(LocalDate.now())) {
+            result.addErrorMessage("Reservation date range must be in the future.");
+        }
+
+
+    }
 
 
     /*private void validateChildrenExist(Reservation reservation, Result<Reservation> result) {

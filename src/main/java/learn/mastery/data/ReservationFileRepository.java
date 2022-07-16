@@ -73,9 +73,8 @@ public class ReservationFileRepository implements ReservationRepository{
         reservation.setId(String.valueOf(nextId));
 
         //reservation.setId(java.util.UUID.randomUUID().toString());
-
-
         //List<Forage> forages = findByDate(forage.getDate());
+
         for (Reservation r : all) {
             if (
                     ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
@@ -146,37 +145,6 @@ public class ReservationFileRepository implements ReservationRepository{
         return result;
         // return null;
     }
-
-
-
-        /*result.setStart_date(LocalDate.parse(fields[1]));
-        result.setEnd_date(LocalDate.parse(fields[2]));
-
-        // guest_id comes from guests.csv
-        Guest guest = new Guest();
-        guest.setId(fields[3]);
-        result.setGuest(guest);
-
-        // getTotal() method in Host
-        *//*Host host1 = new Host();
-        BigDecimal total = host1.setTotal();
-        result.setTotal(total);*//*
-
-        // or
-
-        // getTotal() method in Reservation
-        result.setTotal(BigDecimal.valueOf(Long.parseLong(fields[4])));
-
-
-        Host host = new Host();
-        host.setId(id);
-        // need a new method that will find host in hosts.csv
-
-        //
-
-        result.setHost(host);*/
-
-
 
 
 }

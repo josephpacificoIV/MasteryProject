@@ -74,20 +74,20 @@ public class Controller {
 
 
     private void createReservation() throws DataException {
-        // display all reservations for a host
+
         String email = view.getHostEmail();
-        Host host = hostService.findByEmail(email);
+        Host host = hostService.findByEmail(email); // finds host
 
-        String id = view.displayHost(host);
+        String id = view.displayHost(host); // displays host reservations
         List<Reservation> reservations = reservationService.findById(id);
-        view.displayReservations(reservations, id);
+        view.displayReservations(reservations, id); // display all reservations for a host
 
-        // new reservation inputs
-        String emailGuest = view.getGuestEmail();
-        Guest guest = guestService.findByEmail(emailGuest);
 
-        Reservation reservation = view.makeReservation(host,guest);
-        Result<Reservation> result = reservationService.add(reservation);
+        String emailGuest = view.getGuestEmail(); // get a guest email input
+        Guest guest = guestService.findByEmail(emailGuest); // find guest
+
+        Reservation reservation = view.makeReservation(host,guest); // creates a reservation
+        Result<Reservation> result = reservationService.add(reservation); // validates and adds
 
         // check for duplicate
         boolean duplicate = reservationService.duplicate;
