@@ -5,11 +5,10 @@ import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 import learn.mastery.domain.Result;
 
-import java.math.BigDecimal;
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class View {
 
@@ -46,6 +45,11 @@ public class View {
     public String getGuestEmail() {
         displayHeader(MainMenuOption.CREATE_RESERVATION.getMessage());
         return io.readRequiredString("Enter Guest Email : ");
+    }
+
+    public String getReservationId() {
+        displayHeader(MainMenuOption.CREATE_RESERVATION.getMessage());
+        return io.readRequiredString("Enter Reservation ID : ");
     }
 
     public String displayHost(Host host) {
@@ -85,6 +89,30 @@ public class View {
         }
     }
 
+    public void displayReservationByGuest(List<Reservation> reservations, String id) {
+
+        if (id == null || reservations.isEmpty()) {
+            io.println("No reservations found.");
+            return;
+        }
+        reservations.sort(Comparator.comparing(Reservation::getStart_date));
+        Reservation reservation = reservations.stream()
+                .filter(p -> Objects.equals(p.getId(), id))
+                .findFirst()
+                .orElse(null);
+
+
+        assert reservation != null;
+        io.printf("%nID: %s, %s - %s Guest:%s, %s, %s%n",
+                    reservation.getId(),
+                    reservation.getStart_date(),
+                    reservation.getEnd_date(),
+                    reservation.getGuest().getLast_name(),
+                    reservation.getGuest().getFirst_name(),
+                    reservation.getGuest().getEmail());
+
+    }
+
 
     public Reservation makeReservation(Host host, Guest guest) {
         Reservation reservation = new Reservation();
@@ -92,6 +120,32 @@ public class View {
         reservation.setStart_date(io.readLocalDate("Start date [MM/dd/yyyy]: "));
         reservation.setEnd_date(io.readLocalDate("End date [MM/dd/yyyy]: "));
 
+        reservation.setHost(host);
+        reservation.setGuest(guest);
+        reservation.setGuest_id(guest.getId());
+
+        // reservation.setId() in ReservationFileRepository,
+        // reservation.setTotal() in ReservationService
+
+        return reservation;
+    }
+
+    public Reservation makeUpdate(Host host, Guest guest, Reservation reservation) {
+        //Reservation reservation = new Reservation();
+
+        LocalDate new_start_date = io.readLocalDate("New Start date [MM/dd/yyyy]: ");
+        if(new_start_date != reservation.getStart_date()) { // if the date has changed, change it
+            reservation.setStart_date(new_start_date);
+        } else {
+
+        }
+        LocalDate new_end_date =io.readLocalDate("New End date [MM/dd/yyyy]: ");
+        if(new_end_date != reservation.getEnd_date()) { // if the date has changed, change it
+            reservation.setEnd_date(new_end_date);
+        } else {
+            // problem is in readLocalDate method.
+        }
+        // same host, guest
         reservation.setHost(host);
         reservation.setGuest(guest);
         reservation.setGuest_id(guest.getId());

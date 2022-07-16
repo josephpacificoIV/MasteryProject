@@ -8,6 +8,7 @@ import learn.mastery.data.*;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,23 @@ public class ReservationService {
         }
 
         return result;
+    }
+
+    public Reservation findReservationByEmail(List<Reservation> reservations, String email) {
+        return reservations.stream()
+                .filter(i -> Objects.equals(i.getGuest().getEmail(), email))
+                .findFirst()
+                .orElse(null);
+
+    }
+
+    public Reservation findReservationById(List<Reservation> reservations, String email, String id) {
+        return reservations.stream()
+                .filter(i -> Objects.equals(i.getGuest().getEmail(), email))
+                .filter(i -> Objects.equals(i.getId(), id))
+                .findFirst()
+                .orElse(null);
+
     }
 
 
@@ -85,10 +103,12 @@ public class ReservationService {
     }
 
     public Result<Reservation> update(Reservation reservation) throws DataException {
+
         Result<Reservation> result = validate(reservation);
         if (!result.isSuccess()) {
             return result;
         }
+
 
         /*MemoryResult result = validate(memory);
         if (reservation.getId() <= 0) {
@@ -242,6 +262,7 @@ public class ReservationService {
         /*total = weekEndCost.add(weekDayCost);
         return total;*/
     }
+
 
 
 
