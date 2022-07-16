@@ -63,14 +63,14 @@ public class ReservationFileRepository implements ReservationRepository{
 
     public Reservation add(Reservation reservation) throws DataException {
 
-        List<Reservation> all = findById(reservation.getId());
-        // create next ID
+        List<Reservation> all = findById(reservation.getHost().getId());
+        /*// create next ID
         int nextId = 0;
         for(Reservation r: all){
             nextId = Math.max(nextId, Integer.parseInt(r.getId()));
         }
         nextId++;
-        reservation.setId(String.valueOf(nextId));
+        reservation.setId(String.valueOf(nextId));*/
 
         //reservation.setId(java.util.UUID.randomUUID().toString());
         //List<Forage> forages = findByDate(forage.getDate());

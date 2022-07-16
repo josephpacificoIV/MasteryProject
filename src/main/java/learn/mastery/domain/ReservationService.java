@@ -46,29 +46,43 @@ public class ReservationService {
 
 
 
-    public Result<Reservation> add(Reservation reservation) throws DataException {
+    public Result<Reservation> validateDomain(Reservation reservation) throws DataException {
         Result<Reservation> result = validate(reservation);
         if (!result.isSuccess()) {
             return result;
         }
-        System.out.printf("-- Date Range is available --%n");
+        System.out.printf("%n-- Date Range is available --%n");
         // if reservation is valid, calculate total
         BigDecimal total =
                 calculateTotal(reservation.getHost(),
                         reservation.getStart_date(),
                         reservation.getEnd_date());
-        System.out.printf("Summary%n========Start: %s%nEnd: %s%nTotal: $%s",
+
+        System.out.printf("%nSummary%n========%nStart: %s%nEnd: %s%nTotal: $%s%n",
                 reservation.getStart_date(),
                 reservation.getEnd_date(),
                 total);
         reservation.setTotal(total);
 
-        result.setPayload(reservationRepository.add(reservation));
+        // create nextId
+        List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
+        int nextId = 0;
+        for(Reservation r: all){
+            nextId = Math.max(nextId, Integer.parseInt(r.getId()));
+        }
+        nextId++;
+        reservation.setId(String.valueOf(nextId));
+
 
         return result;
     }
 
-    
+    public Result<Reservation> add(Result<Reservation> result, Reservation reservation) throws DataException {
+
+        result.setPayload(reservationRepository.add(reservation));
+
+        return result;
+    }
 
     private Result<Reservation> validate(Reservation reservation) {
 
@@ -115,24 +129,28 @@ public class ReservationService {
         return result;
     }
 
-    /*private void validateDuplicate(Reservation reservation, Result<Reservation> result){
+    private Result<Reservation> validateDuplicate(Reservation reservation, Result<Reservation> result){
 
-        List<Reservation> reservations = reservationRepository.findById(reservation.getHost().getId());
-        for (Reservation r : reservations) {
-            if (( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
-                            || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()) )
-                            || ( reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
-                            || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) ) ){
+        //List<Reservation> all = findById(reservation.getHost().getId());
+        List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
+
+        for (Reservation r : all) {
+            if ( (reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()))
+                            || (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()))
+                            || (reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
+                            || (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
+            ){
                 result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
                         reservation.getEnd_date()));
-                duplicate = ReservationFileRepository.duplicate;
-                break;
+                //duplicate = ReservationFileRepository.duplicate;
+                return result;
             }
         }
 
+        return result;
 
-    }*/
+    }
 
     private void validateFields(Reservation reservation, Result<Reservation> result) {
         // No past dates.
@@ -189,8 +207,15 @@ public class ReservationService {
         final long weekEndsBetween = start_date.datesUntil(end_date)
                 .filter(d -> !weekday.contains(d.getDayOfWeek()))
                 .count();
+        BigDecimal total = standard.multiply(new BigDecimal(weekDaysBetween)).add(weekend.multiply(new BigDecimal(weekEndsBetween)));
+        System.out.printf("%nWeekdays(%s) @ $%s / per day%nWeekEndDays(%s) @ $%s / per day%nTotal: $%s%n",
+                weekDaysBetween,
+                host.getStandard_rate(),
+                weekEndsBetween,
+                host.getWeekend_rate(),
+                total);
         //BigDecimal weekEndCost = BigDecimal.valueOf(weekEndsBetween * (host.getWeekend_rate()) );
-        return standard.multiply(new BigDecimal(weekDaysBetween)).add(weekend.multiply(new BigDecimal(weekEndsBetween)));
+        return total;
         /*total = weekEndCost.add(weekDayCost);
         return total;*/
     }

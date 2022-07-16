@@ -87,7 +87,21 @@ public class Controller {
         Guest guest = guestService.findByEmail(emailGuest); // find guest
 
         Reservation reservation = view.makeReservation(host,guest); // creates a reservation
-        Result<Reservation> result = reservationService.add(reservation); // validates and adds
+        Result<Reservation> result = reservationService.validateDomain(reservation);
+
+
+        // if reservation is valid and available, send to confirmation screen
+        if(!result.isSuccess()){
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            view.confirmAdd(result);
+        }
+
+        // if admin selects y, then no error message and you add
+        if(result.isSuccess()){
+            result = reservationService.add(result, reservation); // adds
+        }
+
 
         // check for duplicate
         boolean duplicate = reservationService.duplicate;

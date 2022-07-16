@@ -3,6 +3,7 @@ package learn.mastery.ui;
 import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
+import learn.mastery.domain.Result;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -99,6 +100,20 @@ public class View {
         // reservation.setTotal() in ReservationService
 
         return reservation;
+    }
+
+    public Result<Reservation> confirmAdd(Result<Reservation> result){
+        boolean answer;
+        answer = io.readBoolean("Is this okay? [y/n]: ");
+
+        if(!answer){
+            result.addErrorMessage("You said no. Back to Main Menu.");
+            return result;
+        } else {
+            return result;
+        }
+        
+
     }
 
 
