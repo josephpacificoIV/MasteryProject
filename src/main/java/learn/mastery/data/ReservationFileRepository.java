@@ -64,39 +64,26 @@ public class ReservationFileRepository implements ReservationRepository{
     public Reservation add(Reservation reservation) throws DataException {
 
         List<Reservation> all = findById(reservation.getHost().getId());
-        /*// create next ID
-        int nextId = 0;
-        for(Reservation r: all){
-            nextId = Math.max(nextId, Integer.parseInt(r.getId()));
-        }
-        nextId++;
-        reservation.setId(String.valueOf(nextId));*/
-
-        //reservation.setId(java.util.UUID.randomUUID().toString());
-        //List<Forage> forages = findByDate(forage.getDate());
-
-        /*for (Reservation r : all) {
-            if (
-                    ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
-                    || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()) )
-                    || ( reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
-                    || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()) )
-            ){
-                System.out.printf("Reservations cannot overlap. %s - %s",
-                        reservation.getStart_date(),
-                        reservation.getEnd_date());
-                duplicate = true;
-                break;
-            } else {
-                duplicate = false;
-            }
-        }*/
-
         all.add(reservation);
         writeAll(all, reservation.getHost().getId());
 
         return reservation;
     }
+
+
+    @Override
+    public boolean update(Reservation reservation) throws DataException {
+        List<Reservation> all = findById(reservation.getHost().getId());
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getId().equals(reservation.getId())) {
+                all.set(i, reservation);
+                writeAll(all, reservation.getHost().getId());
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*private String getHosts() {
         return Paths.get("./data/", "hosts.csv").toString();
     }*/

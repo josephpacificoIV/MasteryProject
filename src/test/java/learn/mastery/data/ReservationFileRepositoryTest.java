@@ -99,4 +99,16 @@ class ReservationFileRepositoryTest {
     }
 
 
+    @Test
+    void shouldUpdateExistingReservation() throws DataException {
+        List<Reservation> all = repository.findById("test_host_id");
+        Reservation reservation = repository.findReservationById(all,"1");
+        assertEquals("663", reservation.getGuest().getId());
+
+        reservation.setTotal(new BigDecimal("600")); // change total from 400 to 600
+        assertTrue(repository.update(reservation));
+
+    }
+
+
 }

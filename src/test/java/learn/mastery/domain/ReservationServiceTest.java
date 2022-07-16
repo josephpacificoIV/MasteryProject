@@ -22,13 +22,13 @@ class ReservationServiceTest {
             new GuestRepositoryDouble());
 
 
-    /*@Test
+    @Test
     void shouldFindHostById(){
-        List<Reservation> reservations = service.findById("3edda6bc-ab95-49a8-8962-d50b53f84b15");
-        System.out.println(reservations);
+        List<Reservation> reservations = service.findById(String.valueOf(HostRepositoryDouble.HOST));
+        //System.out.println(reservations);
         assertEquals(1, reservations.size());
 
-    }*/
+    }
 
     @Test
     void shouldAddReservation() throws DataException {
@@ -45,7 +45,8 @@ class ReservationServiceTest {
         test.setStart_date(LocalDate.of(2022, 8, 10));
         test.setEnd_date(LocalDate.of(2022, 8, 14));
 
-        Result<Reservation> result = service.add(test);
+        Result<Reservation> result = service.validateDomain(test);
+        result = service.add(result, test);
         assertTrue(result.isSuccess());
 
     }
@@ -65,8 +66,15 @@ class ReservationServiceTest {
         test.setStart_date(LocalDate.of(2021, 8, 10));
         test.setEnd_date(LocalDate.of(2021, 8, 14));
 
-        Result<Reservation> result = service.add(test);
+        Result<Reservation> result = service.validateDomain(test);
+        result = service.add(result, test);
         assertFalse(result.isSuccess());
+    }
+
+
+    @Test
+    void shouldUpdateReservation() {
+        
     }
 
 

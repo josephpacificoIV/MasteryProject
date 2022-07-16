@@ -84,6 +84,28 @@ public class ReservationService {
         return result;
     }
 
+    public Result<Reservation> update(Reservation reservation) throws DataException {
+        Result<Reservation> result = validate(reservation);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        /*MemoryResult result = validate(memory);
+        if (reservation.getId() <= 0) {
+            result.addErrorMessage("Memory `id` is required.");
+        }*/
+
+        if (result.isSuccess()) {
+            if (reservationRepository.update(reservation)) {
+                result.setPayload(reservation);
+            } else {
+                String message = String.format("Reservation id %s was not found.", reservation.getId());
+                result.addErrorMessage(message);
+            }
+        }
+        return result;
+    }
+
     private Result<Reservation> validate(Reservation reservation) {
 
         Result<Reservation> result = validateNulls(reservation);
@@ -91,8 +113,8 @@ public class ReservationService {
             return result;
         }
 
-        // check for duplicates
-        validateDuplicate(reservation, result);
+        // check for overlapping dates
+        validateOverlap(reservation, result);
         if (!result.isSuccess()) {
             return result;
         }
@@ -129,7 +151,7 @@ public class ReservationService {
         return result;
     }
 
-    private Result<Reservation> validateDuplicate(Reservation reservation, Result<Reservation> result){
+    private Result<Reservation> validateOverlap(Reservation reservation, Result<Reservation> result){
 
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
 

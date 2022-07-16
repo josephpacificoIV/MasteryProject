@@ -34,7 +34,6 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         Host host = new Host();
         host.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
         reservation1.setHost(host);
-
         reservation1.setTotal(new BigDecimal("400"));
 
         reservations.add(reservation1);
@@ -61,7 +60,10 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         return null;
     }
 
-
+    @Override
+    public boolean update(Reservation reservation) throws DataException {
+        return false;
+    }
 
 
 }
