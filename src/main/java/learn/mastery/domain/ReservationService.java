@@ -129,27 +129,22 @@ public class ReservationService {
         return result;
     }
 
-    private void validateDuplicate(Reservation reservation, Result<Reservation> result){
+    private Result<Reservation> validateDuplicate(Reservation reservation, Result<Reservation> result){
 
-        //List<Reservation> all = findById(reservation.getHost().getId());
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
 
         for (Reservation r : all) {
-            if ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date())
-                            /*|| (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()))
-                            || (reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
-                            || (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
-            */){
+            if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) || reservation.getEnd_date().isBefore(r.getStart_date())) )
+             {
                 result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
                         reservation.getEnd_date()));
                 break;
-                //duplicate = ReservationFileRepository.duplicate;
-            }
 
+            }
         }
 
-
+        return result;
 
     }
 
@@ -158,6 +153,11 @@ public class ReservationService {
         if ( reservation.getStart_date().isBefore(LocalDate.now()) ||
                 reservation.getEnd_date().isBefore(LocalDate.now())) {
             result.addErrorMessage("Reservation date range must be in the future.");
+        }
+
+        if ( reservation.getStart_date().isAfter(reservation.getEnd_date()) ||
+                reservation.getEnd_date().isBefore(reservation.getStart_date())) {
+            result.addErrorMessage("Start Date must be before End Date.");
         }
 
 
