@@ -91,11 +91,11 @@ public class ReservationService {
             return result;
         }
 
-        /*// check for duplicates
+        // check for duplicates
         validateDuplicate(reservation, result);
         if (!result.isSuccess()) {
             return result;
-        }*/
+        }
 
         validateFields(reservation, result);
         if (!result.isSuccess()) {
@@ -129,26 +129,27 @@ public class ReservationService {
         return result;
     }
 
-    private Result<Reservation> validateDuplicate(Reservation reservation, Result<Reservation> result){
+    private void validateDuplicate(Reservation reservation, Result<Reservation> result){
 
         //List<Reservation> all = findById(reservation.getHost().getId());
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
 
         for (Reservation r : all) {
-            if ( (reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()))
-                            || (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()))
+            if ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date())
+                            /*|| (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()))
                             || (reservation.getStart_date().isAfter(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
                             || (reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isAfter(r.getEnd_date()))
-            ){
+            */){
                 result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
                         reservation.getEnd_date()));
+                break;
                 //duplicate = ReservationFileRepository.duplicate;
-                return result;
             }
+
         }
 
-        return result;
+
 
     }
 

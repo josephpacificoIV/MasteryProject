@@ -75,7 +75,7 @@ public class ReservationFileRepository implements ReservationRepository{
         //reservation.setId(java.util.UUID.randomUUID().toString());
         //List<Forage> forages = findByDate(forage.getDate());
 
-        for (Reservation r : all) {
+        /*for (Reservation r : all) {
             if (
                     ( reservation.getStart_date().isAfter(r.getStart_date()) && reservation.getEnd_date().isBefore(r.getEnd_date()) )
                     || ( reservation.getStart_date().isBefore(r.getStart_date()) &&  reservation.getEnd_date().isBefore(r.getEnd_date()) )
@@ -90,7 +90,7 @@ public class ReservationFileRepository implements ReservationRepository{
             } else {
                 duplicate = false;
             }
-        }
+        }*/
 
         all.add(reservation);
         writeAll(all, reservation.getHost().getId());
