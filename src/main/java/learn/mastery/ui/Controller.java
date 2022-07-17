@@ -113,14 +113,6 @@ public class Controller {
             view.displayStatus(true, successMessage);
         }
 
-        /*// check for duplicate
-        boolean duplicate = reservationService.duplicate;
-        if(duplicate){
-            result.addErrorMessage("Duplicate reservation.");
-        }*/
-
-
-
     }
 
 
@@ -157,7 +149,7 @@ public class Controller {
         Reservation reservation = view.makeUpdate(host,guest, reservation_to_change); // creates an updated reservation
 
         //checkReservation(reservation);
-        Result<Reservation> result = reservationService.validateUpdate(reservation);
+        Result<Reservation> result = reservationService.validateUpdate(reservation); // check if updated reservation is valid
 
         // if reservation is valid and available, send to confirmation screen
         if(!result.isSuccess()){
@@ -179,41 +171,6 @@ public class Controller {
         }
 
     }
-
-
-    private void checkReservation(Reservation reservation) throws DataException {
-
-        Result<Reservation> result = reservationService.validateDomain(reservation);
-
-        // if reservation is valid and available, send to confirmation screen
-        if(!result.isSuccess()){
-            view.displayStatus(false, result.getErrorMessages());
-        } else {
-            view.confirmAdd(result);
-        }
-
-        // if admin selects y, then no error message and you add
-        if(result.isSuccess()){
-            result = reservationService.add(result, reservation); // adds
-        }
-
-
-        /*// check for duplicate
-        boolean duplicate = reservationService.duplicate;
-        if(duplicate){
-            result.addErrorMessage("Duplicate reservation.");
-        }*/
-
-        if (!result.isSuccess()) {
-            view.displayStatus(false, result.getErrorMessages());
-        } else {
-            String successMessage = String.format("Reservation %s created.", result.getPayload().getId());
-            view.displayStatus(true, successMessage);
-        }
-
-    }
-
-
 
 
     private void deleteReservation() throws DataException {
@@ -271,6 +228,32 @@ public class Controller {
         }
 
     }
+
+    /*private void checkReservation(Reservation reservation) throws DataException {
+
+        Result<Reservation> result = reservationService.validateDomain(reservation);
+
+        // if reservation is valid and available, send to confirmation screen
+        if(!result.isSuccess()){
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            view.confirmAdd(result);
+        }
+
+        // if admin selects y, then no error message and you add
+        if(result.isSuccess()){
+            result = reservationService.add(result, reservation); // adds
+        }
+
+
+        if (!result.isSuccess()) {
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            String successMessage = String.format("Reservation %s created.", result.getPayload().getId());
+            view.displayStatus(true, successMessage);
+        }
+
+    }*/
 
 
 }
