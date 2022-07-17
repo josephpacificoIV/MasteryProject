@@ -129,6 +129,7 @@ public class ReservationService {
         counts.put(panel.getType(), counts.get(panel.getType()) - 1);*/
 
         boolean success = reservationRepository.deleteById(host_id, reservation_id);
+
         if(!success){
             result.addErrorMessage("Could not find reservation Id");
 
