@@ -127,13 +127,21 @@ public class Controller {
 
     private void updateReservation() throws DataException {
 
-        // get host data
-        String email = view.getHostEmail();
-        Host host = hostService.findByEmail(email); // finds host
+        boolean isValid = false;
+        List<Reservation> reservations;
+        Host host;
+        do {
+            // get host data
+            String email = view.getHostEmail();
+            host = hostService.findByEmail(email); // finds host
 
-        String id = view.displayHost(host); // displays host reservations
-        List<Reservation> reservations = reservationService.findById(id);
-        view.displayReservations(reservations, id); // display all reservations for a host
+            String id = view.displayHost(host); // displays host reservations
+            reservations = reservationService.findById(id);
+            view.displayReservations(reservations, id); // display all reservations for a host
+            if(!reservations.isEmpty()){
+                isValid = true;
+            }
+        } while (!isValid);
 
         // get guest data
         String emailGuest = view.getGuestEmail(); // get a guest email input

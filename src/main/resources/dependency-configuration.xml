@@ -6,50 +6,50 @@
 
 
     <!-- Repositories -->
-    <bean id="forageRepository" class="learn.foraging.data.ForageFileRepository">
+    <bean id="reservationRepository" class="learn.mastery.data.ReservationFileRepository">
         <!-- File path to the data file. -->
-        <constructor-arg value="./data/forage_data"/>
+        <constructor-arg value="./data/reservations"/>
     </bean>
 
-    <bean id="foragerRepository" class="learn.foraging.data.ForagerFileRepository">
-        <constructor-arg value="./data/foragers.csv"/>
+    <bean id="hostRepository" class="learn.mastery.data.HostFileRepository">
+        <constructor-arg value="./data/hosts.csv"/>
     </bean>
 
-    <bean id="itemRepository" class="learn.foraging.data.ItemFileRepository">
-        <constructor-arg value="./data/items.txt"/>
+    <bean id="guestRepository" class="learn.mastery.data.GuestFileRepository">
+        <constructor-arg value="./data/guests.csv"/>
     </bean>
 
     <!-- Services -->
-    <bean id="forageService" class="learn.foraging.domain.ForageService">
+    <bean id="reservationService" class="learn.mastery.domain.ReservationService">
         <!-- ref points to the configured repository using its id. -->
-        <constructor-arg ref="forageRepository"/>
-        <constructor-arg ref="foragerRepository"/>
-        <constructor-arg ref="itemRepository"/>
+        <constructor-arg ref="reservationRepository"/>
+        <constructor-arg ref="hostRepository"/>
+        <constructor-arg ref="guestRepository"/>
     </bean>
 
-    <bean id="foragerService" class="learn.foraging.domain.ForagerService">
-        <constructor-arg ref="foragerRepository"/>
+    <bean id="hostService" class="learn.mastery.domain.HostService">
+        <constructor-arg ref="hostRepository"/>
     </bean>
 
-    <bean id="itemService" class="learn.foraging.domain.ItemService">
-        <constructor-arg ref="itemRepository"/>
+    <bean id="guestService" class="learn.mastery.domain.GuestService">
+        <constructor-arg ref="guestRepository"/>
     </bean>
 
 
     <!-- TextIO -->
     <!-- No constructor arguments required. -->
-    <bean id="io" class="learn.foraging.ui.ConsoleIO"/>
+    <bean id="io" class="learn.mastery.ui.ConsoleIO"/>
 
     <!-- View -->
-    <bean id="view" class="learn.foraging.ui.View">
+    <bean id="view" class="learn.mastery.ui.View">
         <constructor-arg ref="io"/>
     </bean>
 
     <!-- Controller -->
-    <bean class="learn.foraging.ui.Controller">
-        <constructor-arg ref="foragerService"/>
-        <constructor-arg ref="forageService"/>
-        <constructor-arg ref="itemService"/>
+    <bean class="learn.mastery.ui.Controller">
+        <constructor-arg ref="reservationService"/>
+        <constructor-arg ref="hostService"/>
+        <constructor-arg ref="guestService"/>
         <constructor-arg ref="view"/>
     </bean>
 

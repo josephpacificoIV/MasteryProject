@@ -8,7 +8,6 @@ import learn.mastery.data.*;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -205,14 +204,46 @@ public class ReservationService {
     private Result<Reservation> validateOverlap(Reservation reservation, Result<Reservation> result){
 
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
+        List<Reservation> all_guest = all.stream()
+                .filter(p -> Objects.equals(p.getGuest().getId(), reservation.getGuest().getId()))
+                .findAny().stream()
+                .collect(Collectors.toList()) ;
+
+        //List<Reservation> all_guest = reservationRepository.findReservationsByGuestId(all, reservation.getGuest().getId());
 
         for (Reservation r : all) {
             if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
                     reservation.getEnd_date().isBefore(r.getStart_date())) ) {
-                // this checks if the ID is the same as one on list, therefore it is an update.
-                if (Objects.equals(reservation.getId(), r.getId())){
+
+                if (Objects.equals(reservation.getId(),r.getId())){
                     break;
                 }
+                /*// copy here
+                if (Objects.equals(reservation.getGuest().getEmail(),r.getGuest().getEmail())){
+                    //List<Reservation> guest_reservations = reservationRepository.displayReservationByGuest()
+                    for( Reservation r_guest: all_guest) {
+                    if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
+                                reservation.getEnd_date().isBefore(r.getStart_date())) ) {
+
+                        if(reservation.getId().equals(r_guest.getId())){
+                            break;
+                        }
+
+                    }
+                    result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
+                            reservation.getGuest().getEmail(),
+                            reservation.getStart_date(),
+                            reservation.getEnd_date()));
+                    break;
+                    }
+
+
+
+
+
+                }
+                // to here*/
+
                 result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
                         reservation.getEnd_date()));

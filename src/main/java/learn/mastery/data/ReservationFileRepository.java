@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ReservationFileRepository implements ReservationRepository{
 
@@ -52,6 +53,15 @@ public class ReservationFileRepository implements ReservationRepository{
                 .filter(i -> Objects.equals(i.getId(), id))
                 .findFirst()
                 .orElse(null);
+
+    }
+
+    public List<Reservation> findReservationsByGuestId(List<Reservation> reservations, String id) {
+        return reservations.stream()
+                .filter(i -> Objects.equals(i.getGuest().getId(), id))
+                .findAny().stream()
+                .collect(Collectors.toList());
+
 
     }
 

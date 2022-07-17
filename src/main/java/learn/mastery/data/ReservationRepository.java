@@ -8,6 +8,8 @@ public interface ReservationRepository {
 
     Reservation findReservationById(List<Reservation> reservations, String id);
 
+    List<Reservation> findReservationsByGuestId(List<Reservation> reservations, String id);
+
     List<Reservation> findById(String id);
 
     Reservation add(Reservation reservation) throws DataException;
