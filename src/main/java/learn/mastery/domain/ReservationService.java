@@ -126,6 +126,11 @@ public class ReservationService {
         if (!result.isSuccess()) {
             return result;
         }
+        validateOverlap(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
         System.out.printf("%n-- Date Range is available --%n");
         // if reservation is valid, calculate total
         BigDecimal total =
@@ -202,8 +207,12 @@ public class ReservationService {
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
 
         for (Reservation r : all) {
-            if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) || reservation.getEnd_date().isBefore(r.getStart_date())) )
-             {
+            if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
+                    reservation.getEnd_date().isBefore(r.getStart_date())) ) {
+                // this checks if the ID is the same as one on list, therefore it is an update.
+                if (Objects.equals(reservation.getId(), r.getId())){
+                    break;
+                }
                 result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                         reservation.getStart_date(),
                         reservation.getEnd_date()));
