@@ -16,4 +16,6 @@ public interface ReservationRepository {
 
     boolean update(Reservation reservation) throws DataException;
 
+    boolean deleteById(String host_id, String reservation_id) throws DataException;
+
 }

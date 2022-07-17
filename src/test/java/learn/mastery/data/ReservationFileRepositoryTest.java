@@ -110,5 +110,13 @@ class ReservationFileRepositoryTest {
 
     }
 
+    @Test
+    void shouldDeleteExistingReservation() throws DataException {
+        boolean actual = repository.deleteById("test_host_id", "1");
+        assertTrue(actual);
+        List <Reservation> r = repository.findById("test_host_id");
+        assertEquals(0, r.size()); // should be empty
+    }
+
 
 }

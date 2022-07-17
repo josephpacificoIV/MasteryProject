@@ -96,6 +96,20 @@ public class ReservationFileRepository implements ReservationRepository{
         return false;
     }
 
+    public boolean deleteById(String host_id, String reservation_id) throws DataException {
+        // boolean because we want indication if operation worked or failed
+        // grab all reservations for a given host
+        List<Reservation> all = findById(host_id);
+        for(int i = 0; i < all.size(); i++) {
+            if (Objects.equals(all.get(i).getId(), reservation_id)) { // not instance of the reservation, just the id
+                all.remove(i); // at i, we found the right reservation ID to remove
+                writeAll(all, host_id);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*private String getHosts() {
         return Paths.get("./data/", "hosts.csv").toString();
     }*/

@@ -49,6 +49,11 @@ public class ReservationRepositoryDouble implements ReservationRepository{
     }
 
     @Override
+    public List<Reservation> findReservationsByGuestId(List<Reservation> reservations, String id) {
+        return null;
+    }
+
+    @Override
     public List<Reservation> findById(String id) {
         return reservations.stream()
                 .filter(i -> i.getId().equals(id))
@@ -63,6 +68,11 @@ public class ReservationRepositoryDouble implements ReservationRepository{
     @Override
     public boolean update(Reservation reservation) throws DataException {
         return findById(reservation.getId()) != null;
+    }
+
+    @Override
+    public boolean deleteById(String host_id, String reservation_id) throws DataException {
+        return false;
     }
 
 

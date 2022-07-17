@@ -116,6 +116,25 @@ public class ReservationService {
         return result;
     }
 
+    public Result<Reservation> deleteById(String reservation_id) throws DataException {
+        Result<Reservation> result = new Result();
+        Reservation reservation = reservationRepository.findById();
+        if(reservation == null){
+            result.addErrorMessage("Could not find panel Id: " + panel);
+            return result;
+        }
+
+        /*Map<PanelType, Integer> counts = countTypes();
+        counts.put(panel.getType(), counts.get(panel.getType()) - 1);*/
+
+        boolean success = repository.deleteById(reservation_id);
+        if(!success){
+            result.addErrorMessage("Could not find panel Id: " + panel);
+
+        }
+        return result;
+    }
+
     public Result<Reservation> validateUpdate(Reservation reservation) throws DataException {
         Result<Reservation> result = validateNulls(reservation);
         if (!result.isSuccess()) {
