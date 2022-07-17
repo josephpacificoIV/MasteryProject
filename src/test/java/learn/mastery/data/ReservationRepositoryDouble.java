@@ -19,10 +19,11 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         reservation.setId("1");
         reservation.setStart_date(LocalDate.of(2021, 10, 12));
         reservation.setEnd_date(LocalDate.of(2021, 10, 14));
-        reservation.setGuest(GuestRepositoryDouble.GUEST);
         reservation.setGuest_id(GuestRepositoryDouble.GUEST.getId());
-        reservation.setHost(HostRepositoryDouble.HOST);
         reservation.setTotal(new BigDecimal("400"));
+        reservation.setGuest(GuestRepositoryDouble.GUEST);
+
+        reservation.setHost(HostRepositoryDouble.HOST);
         reservations.add(reservation);
 
         Reservation reservation1 = new Reservation();
@@ -31,9 +32,9 @@ public class ReservationRepositoryDouble implements ReservationRepository{
         reservation1.setEnd_date(LocalDate.of(2022, 10, 14));
         reservation1.setGuest(GuestRepositoryDouble.GUEST);
         reservation1.setGuest_id(GuestRepositoryDouble.GUEST.getId());
-        Host host = new Host();
-        host.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
-        reservation1.setHost(host);
+        Host host2 = new Host();
+        host2.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        reservation1.setHost(host2);
         reservation1.setTotal(new BigDecimal("400"));
 
         reservations.add(reservation1);
@@ -56,7 +57,7 @@ public class ReservationRepositoryDouble implements ReservationRepository{
     @Override
     public List<Reservation> findById(String id) {
         return reservations.stream()
-                .filter(i -> i.getId().equals(id))
+                .filter(i -> i.getHost().getId().equals(id))
                 .collect(Collectors.toList());
     }
 
@@ -67,12 +68,29 @@ public class ReservationRepositoryDouble implements ReservationRepository{
 
     @Override
     public boolean update(Reservation reservation) throws DataException {
-        return findById(reservation.getId()) != null;
+
+        List<Reservation> all = findById(reservation.getHost().getId());
+        for (int i = 0; i < all.size(); i++) {
+            if (Objects.equals(all.get(i).getId(), reservation.getId())) {
+                all.set(i, reservation);
+                return true;
+            }
+        }
+        return false;
+
     }
 
     @Override
     public boolean deleteById(String host_id, String reservation_id) throws DataException {
+        List<Reservation> all = findById(host_id);
+        for(int i = 0; i < all.size(); i++) {
+            if (Objects.equals(all.get(i).getId(), reservation_id)) { // not instance of the reservation, just the id
+                all.remove(i); // at i, we found the right reservation ID to remove
+                return true;
+            }
+        }
         return false;
+
     }
 
 

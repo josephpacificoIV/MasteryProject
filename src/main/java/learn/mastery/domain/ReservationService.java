@@ -116,20 +116,21 @@ public class ReservationService {
         return result;
     }
 
-    public Result<Reservation> deleteById(String reservation_id) throws DataException {
+    public Result<Reservation> deleteById(String host_id, String reservation_id) throws DataException {
         Result<Reservation> result = new Result();
-        Reservation reservation = reservationRepository.findById();
-        if(reservation == null){
-            result.addErrorMessage("Could not find panel Id: " + panel);
+
+        List<Reservation> reservations = reservationRepository.findById(host_id);
+        if(reservations == null){
+            result.addErrorMessage("Could not find reservations");
             return result;
         }
 
         /*Map<PanelType, Integer> counts = countTypes();
         counts.put(panel.getType(), counts.get(panel.getType()) - 1);*/
 
-        boolean success = repository.deleteById(reservation_id);
+        boolean success = reservationRepository.deleteById(host_id, reservation_id);
         if(!success){
-            result.addErrorMessage("Could not find panel Id: " + panel);
+            result.addErrorMessage("Could not find reservation Id");
 
         }
         return result;
