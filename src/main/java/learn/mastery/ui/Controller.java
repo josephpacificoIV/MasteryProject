@@ -9,7 +9,6 @@ import learn.mastery.domain.HostService;
 import learn.mastery.domain.ReservationService;
 import learn.mastery.domain.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -139,17 +138,17 @@ public class Controller {
         // get guest data
         String emailGuest = view.getGuestEmail(); // get a guest email input
         Guest guest = guestService.findByEmail(emailGuest); // find guest
-        //Reservation old_reservation = reservationService.findReservationByEmail(reservations, emailGuest);
 
-        String reservation_id = view.getReservationId();
+        view.displayReservationsByGuestEmail(reservations, emailGuest); // display all reservations by guest email
+
+        String reservation_id = view.getReservationId(); // selects a reservation
         Reservation reservation_to_change = reservationService.findReservationById(reservations, emailGuest, reservation_id);
-        // display reservation to update
-        view.displayReservationByGuest(reservations, reservation_id);
+
+        view.displayReservationByGuest(reservations, reservation_id); // display reservation to update
         Reservation reservation = view.makeUpdate(host,guest, reservation_to_change); // creates an updated reservation
 
         //checkReservation(reservation);
-        // fails here for overlapping dates in validate domain
-        Result<Reservation> result = reservationService.validateDomain(reservation);
+        Result<Reservation> result = reservationService.validateUpdate(reservation);
 
         // if reservation is valid and available, send to confirmation screen
         if(!result.isSuccess()){
@@ -160,7 +159,7 @@ public class Controller {
 
         // if admin selects y, then no error message and you add
         if(result.isSuccess()){
-            result = reservationService.update(reservation); // updates
+            result = reservationService.update(reservation, result); // updates
         }
 
         if (!result.isSuccess()) {

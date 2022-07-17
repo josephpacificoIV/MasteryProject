@@ -93,11 +93,14 @@ class ReservationServiceTest {
         Host host = new Host();
         host.setId("3edda6bc-ab95-49a8-8962-d50b53f84b15");
         reservation.setHost(host);
-        Result<Reservation> result = service.update(reservation);;
+
+        Result<Reservation> result = service.validateUpdate(reservation);
+        result = service.update(reservation, result);
         assertTrue(result.isSuccess());
 
-        List<Reservation> new_all = service.findById("2");
-        Reservation new_reservation = new_all.get(0);
+
+        List<Reservation> new_all = service.findById("1");
+        Reservation new_reservation = new_all.get(1);
 
         // assert that new date has been updated
         assertEquals(LocalDate.of(2022, 10, 16), new_reservation.getEnd_date());

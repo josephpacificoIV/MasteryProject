@@ -34,7 +34,7 @@ public class ConsoleIO {
 
     public String readString(String prompt) {
         print(prompt);
-        return scanner.nextLine();
+        return scanner.nextLine().replaceAll(",", "").trim();
     }
 
     public String readRequiredString(String prompt) {
@@ -115,6 +115,7 @@ public class ConsoleIO {
             }
         }
     }
+
 
     public BigDecimal readBigDecimal(String prompt) {
         while (true) {

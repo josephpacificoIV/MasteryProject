@@ -6,9 +6,12 @@ import learn.mastery.Model.Reservation;
 import learn.mastery.domain.Result;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class View {
 
@@ -43,7 +46,7 @@ public class View {
     }
 
     public String getGuestEmail() {
-        displayHeader(MainMenuOption.CREATE_RESERVATION.getMessage());
+        displayHeader("Reservation Information");
         return io.readRequiredString("Enter Guest Email : ");
     }
 
@@ -113,6 +116,33 @@ public class View {
 
     }
 
+    public void displayReservationsByGuestEmail(List<Reservation> reservations, String email) {
+
+        if (email == null || reservations.isEmpty()) {
+            io.println("No reservations found.");
+            return;
+        }
+        reservations.sort(Comparator.comparing(Reservation::getStart_date));
+        List<Reservation> reservations1 = reservations.stream()
+                .filter(p -> Objects.equals(p.getGuest().getEmail(), email))
+                .collect(Collectors.toList());
+                /*.findAny()
+                .orElse(null);*/
+
+
+        assert reservations1 != null;
+        for(Reservation reservation : reservations1) {
+            io.printf("%nID: %s, %s - %s Guest:%s, %s, %s%n",
+                    reservation.getId(),
+                    reservation.getStart_date(),
+                    reservation.getEnd_date(),
+                    reservation.getGuest().getLast_name(),
+                    reservation.getGuest().getFirst_name(),
+                    reservation.getGuest().getEmail());
+        }
+
+    }
+
 
     public Reservation makeReservation(Host host, Guest guest) {
         Reservation reservation = new Reservation();
@@ -133,18 +163,42 @@ public class View {
     public Reservation makeUpdate(Host host, Guest guest, Reservation reservation) {
         //Reservation reservation = new Reservation();
 
-        LocalDate new_start_date = io.readLocalDate("New Start date [MM/dd/yyyy]: ");
-        if(new_start_date != reservation.getStart_date()) { // if the date has changed, change it
-            reservation.setStart_date(new_start_date);
-        } else {
+        boolean isValid = false;
+        do {
+            String input = io.readString("New Start date [MM/dd/yyyy]: ");
+            LocalDate new_start_date;
+            if (input.length() == 0) {
+                reservation.setStart_date(reservation.getStart_date());
+                isValid = true;
+            } else {
+                try {
+                    new_start_date = LocalDate.parse(input, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                    reservation.setStart_date(new_start_date);
+                    isValid = true;
+                } catch (DateTimeParseException ex) {
+                    System.out.println("Please enter a valid date.");
+                }
+            }
+        } while (!isValid);
 
-        }
-        LocalDate new_end_date =io.readLocalDate("New End date [MM/dd/yyyy]: ");
-        if(new_end_date != reservation.getEnd_date()) { // if the date has changed, change it
-            reservation.setEnd_date(new_end_date);
-        } else {
-            // problem is in readLocalDate method.
-        }
+        isValid = false;
+        do {
+            String input = io.readString("New End date [MM/dd/yyyy]: ");
+            LocalDate new_end_date;
+            if (input.length() == 0) {
+                reservation.setEnd_date(reservation.getEnd_date());
+                isValid = true;
+            } else {
+                try {
+                    new_end_date = LocalDate.parse(input, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                    reservation.setEnd_date(new_end_date);
+                    isValid = true;
+                } catch (DateTimeParseException ex) {
+                    System.out.println("Please enter a valid date.");
+                }
+            }
+        } while(!isValid);
+
         // same host, guest
         reservation.setHost(host);
         reservation.setGuest(guest);

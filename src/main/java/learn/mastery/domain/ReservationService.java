@@ -102,19 +102,10 @@ public class ReservationService {
         return result;
     }
 
-    public Result<Reservation> update(Reservation reservation) throws DataException {
+    public Result<Reservation> update(Reservation reservation, Result<Reservation> result) throws DataException {
+        /*result.setPayload(reservationRepository.update(reservation));
 
-        Result<Reservation> result = validate(reservation);
-        if (!result.isSuccess()) {
-            return result;
-        }
-
-
-        /*MemoryResult result = validate(memory);
-        if (reservation.getId() <= 0) {
-            result.addErrorMessage("Memory `id` is required.");
-        }*/
-
+        return result;*/
         if (result.isSuccess()) {
             if (reservationRepository.update(reservation)) {
                 result.setPayload(reservation);
@@ -123,6 +114,41 @@ public class ReservationService {
                 result.addErrorMessage(message);
             }
         }
+        return result;
+    }
+
+    public Result<Reservation> validateUpdate(Reservation reservation) throws DataException {
+        Result<Reservation> result = validateNulls(reservation);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        validateFields(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        System.out.printf("%n-- Date Range is available --%n");
+        // if reservation is valid, calculate total
+        BigDecimal total =
+                calculateTotal(reservation.getHost(),
+                        reservation.getStart_date(),
+                        reservation.getEnd_date());
+
+        System.out.printf("%nSummary%n========%nStart: %s%nEnd: %s%nTotal: $%s%n",
+                reservation.getStart_date(),
+                reservation.getEnd_date(),
+                total);
+        reservation.setTotal(total);
+
+        /*// create nextId
+        List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
+        int nextId = 0;
+        for(Reservation r: all){
+            nextId = Math.max(nextId, Integer.parseInt(r.getId()));
+        }
+        nextId++;
+        reservation.setId(String.valueOf(nextId));*/
+
+
         return result;
     }
 
