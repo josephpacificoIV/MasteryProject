@@ -250,59 +250,54 @@ public class ReservationService {
         //List<Reservation> all_guest = reservationRepository.findReservationsByGuestId(all, reservation.getGuest().getId());
 
         for (Reservation r : all) {
-            if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
-                    reservation.getEnd_date().isBefore(r.getStart_date())) ) {
+            if ( !(reservation.getStart_date().isAfter(r.getEnd_date())
+                    || reservation.getEnd_date().isBefore(r.getStart_date()))
+                    && !(Objects.equals(reservation.getId(),r.getId())) ){
 
-                /*if (Objects.equals(reservation.getId(),r.getId())){
-                    break;
-                }*/
-                if (Objects.equals(reservation.getId(),r.getId())) {
-                    // copy here
-                    //if (Objects.equals(reservation.getGuest_id(),r.getGuest().getId())){
-                    //if (Objects.equals(reservation.getGuest().getId(), r.getGuest().getId())) {
-                        //List<Reservation> guest_reservations = reservationRepository.displayReservationByGuest()
-                        for (Reservation r_guest : all_guest) {
+                //if (Objects.equals(reservation.getId(),r.getId())) {
+
+                        /*for (Reservation r_guest : all_guest) {
                             if (!(reservation.getStart_date().isAfter(r_guest.getEnd_date()) ||
                                     reservation.getEnd_date().isBefore(r_guest.getStart_date()))) {
 
-                                if(Objects.equals(reservation.getId(),r_guest.getId())){
-                                    break;
-                                } // if statement closed here
+                                if (Objects.equals(reservation.getId(),r.getId())) {
+                                    return result;
+                                } // up to here will work for valid dates
                                 result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
                                         reservation.getGuest().getEmail(),
                                         reservation.getStart_date(),
                                         reservation.getEnd_date()));
                                 break;
-
                             } // if statement closed here
-                    //result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
-                            //reservation.getGuest().getEmail(),
-                            //reservation.getStart_date(),
-                            //reservation.getEnd_date()));
-                            if (Objects.equals(reservation.getId(), r_guest.getId())) {
-                                return result;
-                            } // if statement closed here
+                            result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
+                                    reservation.getGuest().getEmail(),
+                                    reservation.getStart_date(),
+                                    reservation.getEnd_date()));
                             break;
                         } // closes r_guest for loop
+                    // to here*/
 
-                    } // closes the if statement to check if this reservation is the one being updated
-                    // to here
-                //}
+                    //break;
+                    //} // closes the if statement to check if this reservation is the one being updated
 
-                    result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
+
+
+                    result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s overlaps %s - %s",
                             reservation.getStart_date(),
-                            reservation.getEnd_date()));
+                            reservation.getEnd_date(),
+                            r.getStart_date(),
+                            r.getEnd_date()));
                     break;
 
 
             }
         }
 
+
+
+
+
         return result;
-
-
-
-
     }
 
     private void validateFields(Reservation reservation, Result<Reservation> result) {
