@@ -176,6 +176,7 @@ public class ReservationService {
                 reservation.getEnd_date(),
                 total);
         reservation.setTotal(total);
+        reservation.setId(reservation.getId()); // same id as before
 
         /*// create nextId
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
@@ -240,8 +241,11 @@ public class ReservationService {
         List<Reservation> all = reservationRepository.findById(reservation.getHost().getId());
         List<Reservation> all_guest = all.stream()
                 .filter(p -> Objects.equals(p.getGuest().getId(), reservation.getGuest().getId()))
-                .findAny().stream()
                 .collect(Collectors.toList()) ;
+
+
+
+
 
         //List<Reservation> all_guest = reservationRepository.findReservationsByGuestId(all, reservation.getGuest().getId());
 
@@ -249,44 +253,55 @@ public class ReservationService {
             if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
                     reservation.getEnd_date().isBefore(r.getStart_date())) ) {
 
-                if (Objects.equals(reservation.getId(),r.getId())){
+                /*if (Objects.equals(reservation.getId(),r.getId())){
                     break;
-                }
-                /*// copy here
-                if (Objects.equals(reservation.getGuest().getEmail(),r.getGuest().getEmail())){
-                    //List<Reservation> guest_reservations = reservationRepository.displayReservationByGuest()
-                    for( Reservation r_guest: all_guest) {
-                    if ( !(reservation.getStart_date().isAfter(r.getEnd_date()) ||
-                                reservation.getEnd_date().isBefore(r.getStart_date())) ) {
+                }*/
+                if (Objects.equals(reservation.getId(),r.getId())) {
+                    // copy here
+                    //if (Objects.equals(reservation.getGuest_id(),r.getGuest().getId())){
+                    //if (Objects.equals(reservation.getGuest().getId(), r.getGuest().getId())) {
+                        //List<Reservation> guest_reservations = reservationRepository.displayReservationByGuest()
+                        for (Reservation r_guest : all_guest) {
+                            if (!(reservation.getStart_date().isAfter(r_guest.getEnd_date()) ||
+                                    reservation.getEnd_date().isBefore(r_guest.getStart_date()))) {
 
-                        if(reservation.getId().equals(r_guest.getId())){
+                                if(Objects.equals(reservation.getId(),r_guest.getId())){
+                                    break;
+                                } // if statement closed here
+                                result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
+                                        reservation.getGuest().getEmail(),
+                                        reservation.getStart_date(),
+                                        reservation.getEnd_date()));
+                                break;
+
+                            } // if statement closed here
+                    //result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
+                            //reservation.getGuest().getEmail(),
+                            //reservation.getStart_date(),
+                            //reservation.getEnd_date()));
+                            if (Objects.equals(reservation.getId(), r_guest.getId())) {
+                                return result;
+                            } // if statement closed here
                             break;
-                        }
+                        } // closes r_guest for loop
 
-                    }
-                    result.addErrorMessage(String.format("Reservation for %s cannot overlap. %s - %s",
-                            reservation.getGuest().getEmail(),
+                    } // closes the if statement to check if this reservation is the one being updated
+                    // to here
+                //}
+
+                    result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
                             reservation.getStart_date(),
                             reservation.getEnd_date()));
                     break;
-                    }
 
-
-
-
-
-                }
-                // to here*/
-
-                result.addErrorMessage(String.format("Reservations cannot overlap. %s - %s",
-                        reservation.getStart_date(),
-                        reservation.getEnd_date()));
-                break;
 
             }
         }
 
         return result;
+
+
+
 
     }
 
