@@ -4,6 +4,7 @@ import learn.mastery.Model.Guest;
 import learn.mastery.Model.Host;
 import learn.mastery.Model.Reservation;
 import learn.mastery.data.*;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -125,8 +126,20 @@ public class ReservationService {
             return result;
         }
 
+        for(Reservation r : reservations){
+            if(r.getStart_date().isBefore(LocalDate.now()) ||
+            r.getEnd_date().isBefore(LocalDate.now())){
+                result.addErrorMessage("Cannot delete reservation in the past.");
+                break;
+            }
+        }
+
         /*Map<PanelType, Integer> counts = countTypes();
         counts.put(panel.getType(), counts.get(panel.getType()) - 1);*/
+
+        if(!result.isSuccess()){
+            return result;
+        }
 
         boolean success = reservationRepository.deleteById(host_id, reservation_id);
 

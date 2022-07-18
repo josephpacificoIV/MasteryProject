@@ -9,6 +9,7 @@ import learn.mastery.domain.HostService;
 import learn.mastery.domain.ReservationService;
 import learn.mastery.domain.Result;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -217,6 +218,7 @@ public class Controller {
                 System.out.printf("%nEnter valid Reservation data.%n");
             }
         } while(!isValid);
+
 
         Result<Reservation> result = reservationService.deleteById(host.getId(), reservation_to_delete.getId());
 
