@@ -126,21 +126,20 @@ public class ReservationService {
             return result;
         }
 
-        for(Reservation r : reservations){
+        // filter to reservation to delete
+        List<Reservation> res_to_delete = reservations.stream()
+                .filter(r -> Objects.equals(r.getId(), reservation_id))
+                .collect(Collectors.toList());
+
+        // check if that reservation start/end date is before today's date
+        for(Reservation r : res_to_delete){
             if(r.getStart_date().isBefore(LocalDate.now()) ||
             r.getEnd_date().isBefore(LocalDate.now())){
                 result.addErrorMessage("Cannot delete reservation in the past.");
-                break;
+                return result;
             }
         }
-
-        /*Map<PanelType, Integer> counts = countTypes();
-        counts.put(panel.getType(), counts.get(panel.getType()) - 1);*/
-
-        if(!result.isSuccess()){
-            return result;
-        }
-
+        
         boolean success = reservationRepository.deleteById(host_id, reservation_id);
 
         if(!success){
