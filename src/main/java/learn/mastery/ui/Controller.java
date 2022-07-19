@@ -77,18 +77,49 @@ public class Controller {
 
     private void createReservation() throws DataException {
 
-        String email = view.getHostEmail();
-        Host host = hostService.findByEmail(email); // finds host
+        boolean isValid = false;
+        Host host;
+        do {
+            String email = view.getHostEmail();
+            host = hostService.findByEmail(email); // finds host
 
-        String id = view.displayHost(host); // displays host reservations
-        List<Reservation> reservations = reservationService.findById(id);
-        view.displayReservations(reservations, id); // display all reservations for a host
+            String id = view.displayHost(host); // displays host reservations
+            List<Reservation> reservations = reservationService.findById(id);
+            if(!reservations.isEmpty()){
+                isValid = true;
+            }
+            view.displayReservations(reservations, id); // display all reservations for a host
 
+        } while (!isValid);
 
-        String emailGuest = view.getGuestEmail(); // get a guest email input
-        Guest guest = guestService.findByEmail(emailGuest); // find guest
+        /*do {
+            // get host data
+            String email = view.getHostEmail();
+            host = hostService.findByEmail(email); // finds host
 
-        Reservation reservation = view.makeReservation(host,guest); // creates a reservation
+            String id = view.displayHost(host); // displays host reservations
+            reservations = reservationService.findById(id);
+            view.displayReservations(reservations, id); // display all reservations for a host
+            if(!reservations.isEmpty()){
+                isValid = true;
+            }
+        } while (!isValid);*/
+        isValid = false;
+        Guest guest;
+
+        do {
+            String emailGuest = view.getGuestEmail(); // get a guest email input
+            guest = guestService.findByEmail(emailGuest); // find guest
+
+            if(guest != null){
+                isValid = true;
+            }
+            if(!isValid) {
+                view.displayStatus(false, "Please select a guest from the list." );
+            }
+        } while (!isValid);
+
+        Reservation reservation = view.makeReservation(host, guest); // creates a reservation
 
         //checkReservation(reservation);
 
@@ -138,8 +169,21 @@ public class Controller {
         } while (!isValid);
 
         // get guest data
-        String emailGuest = view.getGuestEmail(); // get a guest email input
-        Guest guest = guestService.findByEmail(emailGuest); // find guest
+        isValid = false;
+        Guest guest;
+        String emailGuest;
+        do {
+            emailGuest = view.getGuestEmail(); // get a guest email input
+            guest = guestService.findByEmail(emailGuest); // find guest
+
+            if(guest != null){
+                isValid = true;
+            }
+            if(!isValid) {
+                view.displayStatus(false, "Please select a guest from the list." );
+            }
+        } while (!isValid);
+
 
         view.displayReservationsByGuestEmail(reservations, emailGuest); // display all reservations by guest email
 
@@ -204,7 +248,6 @@ public class Controller {
                 isValid = true;
             }
             view.displayReservationsByGuestEmail(reservations, emailGuest); // display all reservations by guest email
-
 
             String reservation_id = view.getReservationId(); // selects a reservation
             reservation_to_delete = reservationService.findReservationById(reservations, emailGuest, reservation_id);

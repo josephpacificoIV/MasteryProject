@@ -139,7 +139,7 @@ public class ReservationService {
                 return result;
             }
         }
-        
+
         boolean success = reservationRepository.deleteById(host_id, reservation_id);
 
         if(!success){
