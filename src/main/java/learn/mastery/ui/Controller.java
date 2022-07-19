@@ -233,34 +233,43 @@ public class Controller {
             String id = view.displayHost(host); // displays host reservations
             reservations = reservationService.findById(id);
             view.displayReservations(reservations, id); // display all reservations for a host
+
             if(!reservations.isEmpty()){
                 isValid = true;
+            }
+            if(!isValid) {
+                view.displayStatus(false, "Please select a valid host." );
             }
         } while (!isValid);
 
         // get guest data
         isValid = false;
-        Reservation reservation_to_delete;
+        Guest guest;
+        String emailGuest;
         do {
-            String emailGuest = view.getGuestEmail(); // get a guest email input
-            Guest guest = guestService.findByEmail(emailGuest); // find guest
-            if(guest != null ){
+            emailGuest = view.getGuestEmail(); // get a guest email input
+            guest = guestService.findByEmail(emailGuest); // find guest
+            if (guest != null) {
                 isValid = true;
             }
-            view.displayReservationsByGuestEmail(reservations, emailGuest); // display all reservations by guest email
-
-            String reservation_id = view.getReservationId(); // selects a reservation
-            reservation_to_delete = reservationService.findReservationById(reservations, emailGuest, reservation_id);
-            if(reservation_to_delete == null){
-                isValid = false;
+            if(!isValid) {
+                view.displayStatus(false, "Please select a guest from the list." );
             }
+
+        } while (!isValid);
+
+        view.displayReservationsByGuestEmail(reservations, emailGuest); // display all reservations by guest email
+
+        String reservation_id = view.getReservationId(); // selects a reservation
+        Reservation reservation_to_delete = reservationService.findReservationById(reservations, emailGuest, reservation_id);
+
 
             try {
                 view.displayReservationByGuest(reservations, reservation_to_delete.getId()); // display reservation to delete
             } catch (NullPointerException ex) {
                 System.out.printf("%nEnter valid Reservation data.%n");
             }
-        } while(!isValid);
+
 
 
         Result<Reservation> result = reservationService.deleteById(host.getId(), reservation_to_delete.getId());
