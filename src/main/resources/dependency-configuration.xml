@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- Repositories -->
+    <bean id="reservationRepository" class="learn.mastery.data.ReservationFileRepository">
+        <!-- File path to the data file. -->
+        <constructor-arg value="./data/reservations"/>
+    </bean>
+
+    <bean id="hostRepository" class="learn.mastery.data.HostFileRepository">
+        <constructor-arg value="./data/hosts.csv"/>
+    </bean>
+
+    <bean id="guestRepository" class="learn.mastery.data.GuestFileRepository">
+        <constructor-arg value="./data/guests.csv"/>
+    </bean>
+
+    <!-- Services -->
+    <bean id="reservationService" class="learn.mastery.domain.ReservationService">
+        <!-- ref points to the configured repository using its id. -->
+        <constructor-arg ref="reservationRepository"/>
+        <constructor-arg ref="hostRepository"/>
+        <constructor-arg ref="guestRepository"/>
+    </bean>
+
+    <bean id="hostService" class="learn.mastery.domain.HostService">
+        <constructor-arg ref="hostRepository"/>
+    </bean>
+
+    <bean id="guestService" class="learn.mastery.domain.GuestService">
+        <constructor-arg ref="guestRepository"/>
+    </bean>
+
+
+    <!-- TextIO -->
+    <!-- No constructor arguments required. -->
+    <bean id="io" class="learn.mastery.ui.ConsoleIO"/>
+
+    <!-- View -->
+    <bean id="view" class="learn.mastery.ui.View">
+        <constructor-arg ref="io"/>
+    </bean>
+
+    <!-- Controller -->
+    <bean class="learn.mastery.ui.Controller">
+        <constructor-arg ref="reservationService"/>
+        <constructor-arg ref="hostService"/>
+        <constructor-arg ref="guestService"/>
+        <constructor-arg ref="view"/>
+    </bean>
+
+
+</beans>
