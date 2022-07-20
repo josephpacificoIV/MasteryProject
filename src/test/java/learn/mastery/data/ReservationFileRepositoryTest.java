@@ -90,10 +90,11 @@ class ReservationFileRepositoryTest {
 
         reservation.setHost(host);
         reservation.setTotal(new BigDecimal("400"));
-
+        reservation.setId("2");
         Reservation actual = repository.add(reservation);
+
         assertNotNull(actual);
-        assertEquals("1", actual.getId());
+        assertEquals("2", actual.getId());
 
 
     }

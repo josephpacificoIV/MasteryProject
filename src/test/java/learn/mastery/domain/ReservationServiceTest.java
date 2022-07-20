@@ -105,9 +105,10 @@ class ReservationServiceTest {
     }
 
     @Test
-    void shouldDelete() throws DataException{
+    void shouldNotDeleteReservationInThePast() throws DataException{
         Result<Reservation> result = service.deleteById(HostRepositoryDouble.HOST.getId(), "1");
-        assertTrue(result.isSuccess());
+        result.getErrorMessages();
+        assertFalse(result.isSuccess());
     }
 
 
